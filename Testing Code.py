@@ -16,5 +16,5 @@ text
 is a
 waste
 of your time.
-{0:1}{1:2.2}{0:1.1}""", string1,string2,string3)
+{0:1}{1:2.2}{2:1.1}""", string1,string2,string3)
 print(test)
