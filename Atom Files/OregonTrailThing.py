@@ -1,85 +1,55 @@
-#OREGON TRAIL PROJECT
-#Anthony Garrard // Caleb Keller
-#started 11/20
-import time
-import sys
-def LogoScreen():
-  """Displays Logo, Names, and copyright"""
-  logo = """
-                  _____________
-                 |   ___    __/
-                 |  |   |  |
-                 |  |   |  |
-                 |  |   |  |___________________
-                 |  |___|          _________   |
-                 |      ________  |_________|  |
-        __       |     |        |     ______   |
-       |  \______|     |        |    |      \\__|
-       |   _________   |________|    |
-       |  |_________|          ___   |
-       |___________________   |   |  |
-                           |  |   |  |
-                           |  |   |  |
-                         __|  |___|  |
-                        \\____________| """
-  names = "Anthony // Caleb"
-  cright = "©Shuriken Studios"
-  print(logo, names, cright, sep="\n")
+#Caleb Keller
+#REEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+import datetime
+import random
+START_DATE = datetime.datetime(1843,3,1)
+current_date = START_DATE
+hp = 100
+horseHp = 100
+totalMiles = 2000
+milesTraveled = 0
+food = 1000
+rations = "full"
+health = "good"
+weather = "cold"
+pace = "normal"
+wagonHealth = 100
 
-def Menu():
-    """Returns a valid option from current menu """
-    print(menuOptions)#Is it ready to test yet?
-    getNumber(menuOptions, 1, len(menuOptions))#ask for what imports we need
-    return(responce)
-
-def slowText(text):
-
-    """MAKES TYPING EFFECT TEXT"""
-
-    for char in text:
-        time.sleep(0.01)
-        sys.stdout.write(char)
-        sys.stdout.flush()
-
-    time.sleep(0.5)
-    print()
-
-def getNumber(question,high,low):
-    responce = None
-    while responce not in range(low,high):
-        slowText(question)
-        responce = input()
-    if responce.isnumeric():
-        responce = int(responce)
+def turn(hp):
+    weather = random.choice(["hot", "good", "fair", "poor", "windy", "rain", "blizzard"])
+    if hp >=80:
+        healthCondition = "good"
+    elif hp < 80 and hp >= 50:
+        healthCondition = "fair"
     else:
-        slowText("Please enter a number.")
-        return responce
+        healthCondtition = "poor"
 
-def checkValue(rightValue, value):
-    """Checks to see if the value is valid or not"""
-    valueType = type
-
-def StartScreen():
-    """ Displays the start menu with 3 options, start, learn, exit"""
-    oBanner = """THE UNNAMED TRAIL\n-------------------"""
-    print(oBanner)
-    startOptions = ["(1) Travel the Trail", "(2) Learn about the Trail", "(3) End"]
-    menuOptions[0:3] = startOptions[0:3]
-    Menu()
-    while True:
-        if int(choice) == 1:#Play
-            slowText("Travel the Trail")
-            break
-        elif int(choice) == 2:#Learn about trail
-            slowText("Learn the Trail")
-            break
-        elif int(choice) == 3:#quit
-            slowText("Quit")
-            break
-
-#Universal Variables
-menuOptions = []
-LogoScreen()
-input()#stop to check def
-StartScreen()
-input()#stop to check def
+    if rations == "full":
+        rationsMod = 2
+    elif rations == "half:
+        rationsMod = 1
+    else:
+        rationsMod = 0.5
+    num = random.randint(1, 100)
+    if num >= 50 and num < 60:
+        problem = random.choice(["lost", "snake bite", "sick", "horse died"])
+    if problem == "lost":
+        lost = random.randint(1, 7)
+        lostOne = random.choice(party)
+        slowText(str.format("{0} got lost for {1} days.", lostOne, lost))
+        currentDate += datetime.timedelta(days = lost)
+        food -= (len(party)*rationMod *lost)
+    if problem == "sick":
+        hp -= 20
+    if problem == "snake bite":
+        hp -= 50
+    if problem == "horse died":
+        horse -= 1
+        food += 50
+        slowText("""One of your horses died. You now have more food.
+Don't worry, you're not a horrible person if you eat a horse.""")
+    print("") #This will be ascii art so it needs to use the print statement
+        
+        
+        
+    
