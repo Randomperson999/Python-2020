@@ -1,0 +1,20 @@
+|This is a test,/ it's only a test,/ of the,/ Midterm,/ Python/ Coding/ class.    |
+Classes:/|---------------|
+How would you initialize a class called Ree?
+class Ree:
+class Ree():
+def class Ree:
+class = Ree
+1
+You define a class by typing class and then the class name with a colon at the end.
+Scope:/|---------------|
+If a variable is declared at a local scope within a function, can it be changed outside of it?
+Yes, it can be changed if it’s declared anywhere
+Yes, but only if you do the function name with a dot and the variable name.
+No, you can not change it outside of the function because it’s a local variable.
+None of these answers are correct
+3
+You have to declare a variable at a global or class scope to edit its value.
+Class variables:/|---------------|
+Assuming a variable named name is declared at a class scope in a class called nameStuff,/what 
+
