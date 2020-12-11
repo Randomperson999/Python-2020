@@ -1,0 +1,2 @@
+[Errno 2] No such file or directory: 'assets/test/testThoing.txt' 12/07/20 08:39:59
+
