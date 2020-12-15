@@ -101,7 +101,7 @@ def createReportCard(name, testTime, score, totalQuestions):
         card.write("Letter Grade = F")
     
 def main():
-    file = openFile("MidtermTest.txt", "r")# Will need to change name to match the test your taking
+    file = openFile("Midterm_Test.txt", "r")# Will need to change name to match the test your taking
     title = nextLine(file)
     name, testTime = getInput("What's your name?:\n", 3, 13)
     welcome(title, name, testTime)
