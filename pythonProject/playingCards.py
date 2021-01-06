@@ -5,11 +5,10 @@ import random
 class Card(object):
     RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
     SUITS = ["♠", "♣", "♦", "♥"]
-    def __init__(self,rank,suit):
 
+    def __init__(self, rank, suit):
         self.suit = suit
         self.rank = rank
-
     def __str__(self):
         rep = str.format("""
         +------------+
@@ -63,35 +62,30 @@ class Deck(Hand):
                         hand.clear()
                     self.deal()
 
-deck = Deck()
-deck.populate()
-deck.shuffle()
-player1 = Hand()
-player2 = Hand()
-river = Hand()
-players = [player1, player2]
-for i in range(2):
-    deck.deal(players,1)
-    deck.deal([river],1)
-deck.deal([river],3)
-print("River: \n")
-print(river)
-print("Player 1: \n")
-print(player1)
-input("Player 1 bet: ")
-print("Player 2: \n")
-print(player2)
-input("Player 2 bet: ")
-for i in range(3):
-    deck.deal([river],1)
-    print("River: \n")
-    print(river)
-    print("Player 1: \n")
-    print(player1)
-    input("Player 1 bet: ")
-    print("Player 2: \n")
-    print(player2)
-    input("Player 2 bet: ")
-
+class PosCard(Card):
+    def __init__(self, rank, suit):
+        super(PosCard, self).__init__(rank, suit)
+        self.faceUp = True
+    def flip(self):
+        self.faceUp = not self.faceUp
+    def __str__(self):
+        if self.faceUp:
+            rep = super(PosCard, self).__str__()
+        else:
+            rep = """
+        +------------+
+        |############|
+        |############|
+        |############|
+        |############|
+        |############|
+        |############|
+        |############|
+        +------------+
+                """
+        return rep
+if __name__ == "__main__":
+    print("You ran this module (and did not 'import' it).")
+    input("\n\nPress Enter to exit...")
 
 
