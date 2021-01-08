@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 # Functions:
 
+#------For testing purposes, I sometimes will switch slowText() with print() for speed.
+
 def slowText(text, speed=.03, sleeping=0.3):
 #This is so you have the option to put in slower or faster text.
 #The defaults are 0.03, and 0.3.
@@ -16,7 +18,7 @@ def slowText(text, speed=.03, sleeping=0.3):
         sys.stdout.flush()
 
     time.sleep(sleeping)
-def getInput(question, minLength, maxLength):
+def getName(question, minLength, maxLength):
     """Gets a specific input for something."""
     time = datetime.now()
     testTime = time.strftime("%m/%d %H:%M")
@@ -28,7 +30,7 @@ def getInput(question, minLength, maxLength):
         elif len(pInput) < minLength:
             slowText(str.format("Input must be at least {} characters.", minLength))
         elif len(pInput) > maxLength:
-            slowText(str.format("Input must be shorter than {} characters.", maxLength+1))
+            slowTex(str.format("Input must be shorter than {} characters.", maxLength+1))
 def getNum(question,low, high):
     """Gets a number and a range that it can be accepted in."""
     responce = None
@@ -39,7 +41,7 @@ def getNum(question,low, high):
           response = int(response)
           break
       else:
-          slowText(str.format("Please enter a number between {} and {}.", low, high-1))
+          slowText(str.format("Please enter a number between {} and {}. ", low, high-1))
     return(response)
 def welcome(title, name, testTime):
     """Welcome the player"""
@@ -50,7 +52,7 @@ def openFile(fileName, mode):
     try:
         file = open("assets/test/"+fileName, mode)
     except IOError as e:
-        print("Unable to open the file", fileName, "Ending program. \n", e)
+        slowText("Unable to open the file", fileName, "Ending program. \n", e)
         try:
             file = open("assets/errors/errorLog.txt", "a+")
             time = datetime.now()
@@ -103,7 +105,7 @@ def createReportCard(name, testTime, score, totalQuestions):
 def main():
     file = openFile("MidtermTest.txt", "r")# Will need to change name to match the test your taking
     title = nextLine(file)
-    name, testTime = getInput("What's your name?:\n", 3, 13)
+    name, testTime = getName("What's your name?:\n", 3, 13)
     welcome(title, name, testTime)
     score = 0
     totalQuestions = 0
@@ -111,6 +113,7 @@ def main():
     while category:
         totalQuestions +=1
         slowText(category)
+        # 'str(totalQuestions)+". "+' for when one wants to add the numbers
         slowText(question)
         for i in range(len(answers)):
             slowText(str.format("\{}: {}", i+1, answers[i]))

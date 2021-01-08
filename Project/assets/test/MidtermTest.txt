@@ -1,20 +1,201 @@
-|This is a test,/ it's only a test,/ of the,/ Midterm,/ Python/ Coding/ class.    |
-Classes:/|---------------|
-How would you initialize a class called Ree?
+|This is a test,  |/|it's only a test,|/|of the,          |/|Midterm,         |/|Python           |/|Coding           |/|class.           |
+Classes:/|---------------------------|
+1. How would you initialize a class called Ree?
 class Ree:
 class Ree():
 def class Ree:
 class = Ree
 1
 You define a class by typing class and then the class name with a colon at the end.
-Scope:/|---------------|
-If a variable is declared at a local scope within a function, can it be changed outside of it?
-Yes, it can be changed if it’s declared anywhere
+Classes:/|---------------------------|/*/
+2. What software philosophy uses software objects to organize re-usable code and to represent real-world concepts or things?
+Structured Programming
+Python Zen
+Console Programming
+Object-Oriented Programming
+4
+The software is called Object-Oriented Programming.
+Objects:/|---------------------------|
+3. When designing an object, what concept covers the values stored in variables that belong to an object?
+Data or Properties
+Orientation
+Relationships
+Behavior
+1
+The concept is data or properties.
+Relationships:/|---------------------------|
+4. Which of the following is NOT a general type of relationship between objects?
+"Uses-A"
+"Has-A"
+"Is-A"
+"Adds-A"
+4
+All of them are relationship besides "Adds-A".
+Class Functions:/|---------------------------|
+5. When a function is defined within a class, it is also called a(n) ___________.
+object
+variable
+method
+value
+3
+A function defined in a class is called a method.
+Classes:/|---------------------------|
+6. Data that is stored in variables belonging to a class is often called a _______________.
+method
+property or attribute
+list
+name
+2
+The data in variables is a property or attribte.
+Classes:/|---------------------------|
+7. The data is called a property or attribute./Given the code below, which answer best describes what has been defined?//class Airplane:/   wings = 2/   seats = 40
+An object named "airplane" that has two class properties
+An object named "airplane" that has two methods
+A method named "airplane" that has two child objects
+A property named "airplane" that has two local methods
+1
+Variables at class level are called class properties.
+Classes:/|---------------------------|
+8. Given the following class definition, which of the answers correctly prints the value stored in the "hour" class variable?//class Clock:/   hour = 10/   minute = 35
+print("The hour is:", Clock.hour)
+print("The hour is:", hour)
+print("The hour is:", Clock)
+print("The hour is:", hour.Clock)
+1
+It would be the class name dot the class variable (Clock.hour)
+Classes:/|---------------------------|
+9. Given the following code, how and where would you define a method belonging to this object?//class Clock:/   hour = 10/   minute = 35
+With a "method" statement located above the "class" statement and indented to the right
+With a "def" statement, indented to the right underneath the "class" statement
+With a "function" statement located above the "class" statement
+With a "def" statement below the "class" statement, aligned on the left with no indentation/*/
+2
+You would use 'def' and the method name inside a class.
+Scope:/|---------------------------|
+10. If a variable is declared at a local scope within a function, can it be changed outside of it?
+Yes, it can be changed if it’s declared anywhere!
 Yes, but only if you do the function name with a dot and the variable name.
 No, you can not change it outside of the function because it’s a local variable.
-None of these answers are correct
+None of these answers are correct.
 3
 You have to declare a variable at a global or class scope to edit its value.
-Class variables:/|---------------|
-Assuming a variable named name is declared at a class scope in a class called nameStuff,/what 
-
+Class variables:/|---------------------------|
+11. Assuming a variable named name is declared at a class scope in a class called name_stuff,/how do you access it within a function defined in name_stuff?
+You can simply use it anywhere in the class just by the variable name.
+name_stuff.name
+name_stuff.name()
+name.name_stuff
+2
+You use the class name with a dot and then the variable name to access a class variable.
+String formatting:/|---------------------------|
+12. What correctly uses string formatting?
+string.format("{}","e")
+format.string("{}","e")
+string_format("{}","e")
+str.format("{}","e")
+4
+Use str.format() to format a string of text.
+String formatting:/|---------------------------|
+13. What will the output look like when the code is run?//print(str.format("{1}, {0} {2}", "word", "stuff", "nonesense"))/
+word, stuff nonesense
+word, nonesense stuff
+stuff, word nonesense
+It will have an error.
+3
+0 is the first value,and it counts up from there.
+String formatting:/|---------------------------|
+14. What does '\t' do?
+It tabs the text to the right.
+It adds a space.
+It changes the font.
+It makes a new line.
+1
+'\t' tabs the text to the right.
+String formatting:/|---------------------------|
+15. What does '\n' do?
+It adds a space.
+'\n' is not a string format.
+It makes a new line.
+It adds an n.
+3
+'\n' makes a new line.
+Vaiables:/|---------------------------|
+16. How do you initialize a variable name with "[name]" in it?
+name: "[name]"
+name = "[name]"
+def name = "[name]"
+var name = "[name]"
+2
+You initialize a variable by the name, an equals sign, and then the data inside it./Example: name = "[name]"
+Functions:/|---------------------------|/*/
+17. Which of the following best describes a "function" in your code?
+A special variable that can hold multiple values
+A document describing all of the things your program can do
+A block of re-usable code that can be used many times from different places in your program
+A block of code that will loop while a logical expression is true
+3
+A function is a block of reusable code that can be used in many places in your program.
+Functions:/|---------------------------|
+18. Which keyword is always used to start a function definition?
+def
+function
+define
+start
+1
+'def' is used to start a function definition.
+Functions:/|---------------------------|
+19. What keyword is used to halt a function and go back to the calling code?
+end
+stop
+quit
+return
+4
+The keyword 'return' is used to halt a function.
+Functions:/|---------------------------|
+20. Given the following function definition://def sound_horn()://    print("Beep, Beep!")//How would you call this function in your code?
+call horn
+sound_horn()
+def sound_horn()
+call sound_horn()
+2
+You just use the function name and opening and closing parenthisis.
+Functions:/|---------------------------|
+21. Which of the following function names is INVALID?
+away_we_go123
+AwayWeGo123
+123_away_we_go
+away1we2go3
+3
+You can't use numbers in a function or variable name.
+Functions:/|---------------------------|
+22. Given the function definition below, which of the following statements correctly calls the function?//def square_area ( length, width ):/   area = length * width/   print(area)
+square_area(20)
+square_area(4,5)
+square_area(5, 4, 3)
+square_area()
+2
+There are two values to put into the function.
+Functions:/|---------------------------|
+23. Which of the following best describes a function parameter?
+A constant value that never changes at any point within your program
+A variable that can be accessed both inside a function and by external code
+A limitation on the number of statements contained inside the function
+Something that can be used as a variable inside a function, with an initial value set by the calling code/*/
+4
+A function parameter is a value that canbe used as a variable inside a method.
+   | The Final Questions |/|---------------------------|
+24. Hollow Knight, Minecraft, and A Link to the Past are...
+Awesome
+Lame
+Boring
+Not good
+1
+You should know all those games are awesome!
+   | The Final Questions |/|---------------------------|
+25. What is the best vegetable?
+Broccoli
+Carrot
+Lettuce
+Brogle (vegatable from Timotainment)
+4
+B R O G L E is the best vegetable...

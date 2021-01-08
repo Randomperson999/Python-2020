@@ -1,0 +1,3 @@
+name = eeg
+numCorrect = 4
+Percentage = %100.0

@@ -1,0 +1,3 @@
+name = ree
+numCorrect = 25
+Percentage = %100.0

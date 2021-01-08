@@ -1,6 +1,6 @@
 #OREGON TRAIL PROJECT
 #Anthony Garrard // Caleb Keller
-#started 11/20
+#started 11/20| Today is the day to fix the last problems. (Testing code: slowText("Ya game works") )
 import time
 import sys
 import datetime
@@ -186,7 +186,7 @@ def play():
     horses = 0
     party = []
     weather = "good"
-    health = 100
+    hp = 100
     rations = "full"
     pace = "normal"
 
@@ -195,12 +195,12 @@ def play():
     party = nameSetup()
     money = moneySetup(pClass)
     money, food, arrows, clothes, parts, horses = shop(money, food, arrows, clothes, parts, horses, len(party))
-    while len(party) > 0 and milesTraveled > 0:
-      turn(hp, food, totalMiles)
-      if totalMiles <= 0:
-        slowText("Congrats, you made it to the land of your desire!")
-      else:
-        slowText("You and your friends are all dead... be more careful next time.")
+    while len(party) > 0 and totalMiles > 0:
+        turn(hp, food, totalMiles, arrows)
+        if totalMiles <= 0:
+            slowText("Congrats, you made it to the land of your desire!")
+        elif len(party) <= 0:
+            slowText("You and your friends are all dead... be more careful next time.")
 
 def startMonth():
     pass
@@ -242,7 +242,7 @@ def shop(money, food, arrows, clothes, parts, horses, partySize):
             food = 0
             spentOnItems[1] = 0.00
             slowText(str.format("""I reccommend you take at least 40 rations for each person in your party.
-            I see that you have {} party members. My price is 1 gold per ration.""", partySize))
+I see that you have {} party members. My price is 1 gold per ration.""", partySize))#Test for removing empty space
             answer = getNumber("How many rations of food do you want?", 50*partySize, 0)
             cost = int(answer)
             food = answer
@@ -253,7 +253,7 @@ def shop(money, food, arrows, clothes, parts, horses, partySize):
             clothes = 0
             spentOnItems[2] = 0.00
             slowText("""You'll need warm clothing when your quest takes you to the mountains.
-            I recommend taking at least 2 sets of clothes per person. Each set is 10 gold.""")
+I recommend taking at least 2 sets of clothes per person. Each set is 10 gold.""")#Test for removing empty space
             answer = getNumber("How many sets of clothes do you want?", partySize*3, 0)
             cost = int(answer) * 10
             clothes = answer
@@ -319,14 +319,14 @@ def shop(money, food, arrows, clothes, parts, horses, partySize):
             input()
 
         input()
-def travel(weather, pace, health):
+def travel(weather, pace, hp):
     hours = 0
     mph = 0
     weatherMod = 0
-    #health
-    if health >= 80:
+    #hp
+    if hp >= 80:
         hours = 8
-    elif health<80 and health >=55:
+    elif hp< 80 and hp >=55:
         hours = 4
     else:
         hours = 2
@@ -366,10 +366,10 @@ def pace(pace):
         pace = "slow"
     return pacer
 def hunt():
-    success = false
-    lostArrows = randint(-3, -10)
-    num = random.randint(1,2)
-    if num == 1:
+    success = False
+    lostArrows = random.randint(-3, -10)
+    num = random.randint(1,5)
+    if num == 1 or num == 3:
         success = True
     else:
         success = False
@@ -391,7 +391,7 @@ def hunt():
             food = 20
         else:
             food = 10
-            return food, lostArrows
+            return lostArrows, food
     else:
         return lostArrows
 
@@ -409,32 +409,37 @@ def rations(food):
         return rations
 
 
-def rest(hp):
-    healthMod = 0.0
+def rest(hp, rations):
+    hpMod = 0.0
     restDays = getNumber("How many days do you want to rest? ", 10, 1)
     if rations == "full":
-        healthMod = 2
+        hpMod = 2
     elif rations == "half":
-        healthMod = 1
+        hpMod = 1
     else:
-        healthMod = 0.5
-    healthGain = 10*restDays*healthMod
-    if healthGain+hp >= 100:
+        hpMod = 0.5
+    hpGain = 10*restDays*hpMod
+    if hpGain+hp >= 100:
         hp = 100
     else:
-        hp += healthGain
+        hp += hpGain
     return hp
 
 
 
-def turn(hp, food, totalMiles):
+def turn(hp, food, totalMiles, arrows):
     weather = random.choice(["hot", "good", "fair", "poor", "windy", "rain", "blizzard"])
     mainChoice = getNumber("Would you like to \n(1) Rest \n(2) Hunt \n(3) Set Pace \n(4) Check Supplies \n(5) Continue Travel \n(6) Set Rations", 6,1)
 
     if mainChoice == 1:
         hp = rest(hp)
     elif mainChoice == 2:
-        food += hunt()
+        if arrows == 0:
+            slowText("You don't have any arrows. You can't hunt.")
+            return
+        lostArrows, newFood = hunt()
+        food += newFood
+        arrows += lostArrows
     elif mainChoice == 3:
         pace = pace(pace)
     elif mainChoice == 4:
@@ -445,11 +450,11 @@ def turn(hp, food, totalMiles):
         rations = rations(food)
 
     if hp >= 80:
-        healthCondition = "good"
+        hpCondition = "good"
     elif hp < 80 and hp >= 50:
-        healthCondition = "fair"
+        hpCondition = "fair"
     else:
-        healthCondtition = "poor"
+        hpCondtition = "poor"
 
 
 
