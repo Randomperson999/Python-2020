@@ -1,0 +1,161 @@
+CompProgramming Python Midterm Test /Test Created by: Jadiah Jensen
+Question 1
+When storing a number such as 1 or 10, the preferred data type is ______?
+Integer
+String
+Float
+Potato
+1
+An Integer is a whole, numerical value without numbers /behind the decimal point
+Question 2
+When concatenating a print statement, you must use which data type?
+String
+Float
+Potato
+Integer
+1
+Strings are the only values that can be concatenated in a print statement
+Question 3
+When a number has a decimal point, such as 1.33333345, what data type is it stored as?
+Float
+Potato
+Integer
+String
+1
+A Float is fractional numerical value written with numbers /behind the decimal point
+Question 4
+Which of the following is NOT a Python Data Type?
+Potato
+Integer
+String
+Float
+1
+Potato is not a Python Data Type
+Question 5
+What is the correct way to define a function?
+def function_name():
+make function_name():
+createACoolFunction function_name():
+func function_name():
+1
+The correct way to define a function is /def function_name():
+Question 6
+Which of the following will creat a While-Loop?
+while True:
+untilNot True:
+watiUntil True:
+DoUntilNot True:
+1
+The correct way to create a While-Loop is "while True:"
+Question 7
+How do you correctly append data to the end of a list?
+list.append()
+list.addStuff()
+list.+data()
+list.putThere()
+1
+You add data to the end of a list via the /.append() function
+Question 8
+How do you remove and return a data point within a list?
+list.pop()
+list.removereturn()
+list.cancelreturn()
+list.-+()
+1
+The function used to remove and return a data point from a list is /.pop()
+Question 9
+Which of the following anwers will correctly print "This is a test, and only a test"?
+print("This is a test, and only a test")
+writeontoscreen("This is a test, and only a test")
+print("The stuff that is said in the question")
+print("This is a {}, and only a {}", refridgerator, turkey)
+1
+The correct way to print the given statement is /print("This is a test, and only a test")
+Question 10
+Which of the following is correctly written camel casing?
+camelCase
+CaMeLcase
+CamelCASE
+CAMELCASe
+1
+The first option, camelCase, is correctly written with the /first letter of each word, asside from the first, is capitalized
+Question 11
+Which is correctly written underscore casing?
+underscore_case
+un_de_rs_co_re_ca_si_ng
+__under__score__casing__
+Underscorecasing_____
+1
+Underscore casing has one underscore between each word only
+Question 12
+How do you assign a variable correctly?
+var = 10
+var is 10
+var equals 10
+var isdecidedtobe 10
+1
+The correct way to assign a variable is with a single /equal sign between the variable name and the data assigned
+Question 13
+Which of the following INCORRECTLY names a variable?
+varName = 10
++-var-+ = 10
+)(var)( = 10
+$&var&$ = 10
+1
+Pretty much the only symbol, asside from letters and numbers, that can /be used to name variables is the underscore
+Question 14
+To safely and elegantly avoid a serious problem with a failable piece of code, a suggested method is the...
+Try: Except:
+Dontdoifdontwork:
+onlyifitworks:
+this: orthis:
+1
+The "try: except:" statement handles code that could potentially fail and /safely addresses the issue by running a different set of coding instead
+Question 15
+How would you correctly pass a variable into a function?
+def function_name(var1):
+def function_name::pass var1::
+def function_name!ivar1i!:
+def function_name(_(-(var)-)_):
+1
+The best way to pass a variable into a function without giving it /complete global access is "def function_name(var1):"
+Question 16
+What way is a method of preserving data in Python?
+Pickling
+Keeping In A Jar
+Putting In The Larder
+Food Storage
+1
+The only method of preserving data in Python that is shown here is pickling
+Question 17
+The way to signify a constant variable is...
+Capitalize all letters: VARIABLE
+Surround with dozens of parentheses: ((((((((((((variable))))))))))))
+Add plus and minus signs around it: +-+variable-+-
+Freeze with liquid nitrogen
+1
+Capitalzing all the letters of a variable show that it is a constant
+Question 18
+Who first created the coding language of Python?
+Guido van Rossum
+A Smol Chittler
+Dwayne the Rock Johnson
+A Rock
+1
+Guido van Rossum created the programming language called Python
+Question 19
+The first letter of the alphabet is...
+A
+B
+C
+D
+1
+The first letter of the English alphabet (and many other alphabets) /is A
+Question 20
+On a scale of 1 to 10, how easy was this test?
+10
+Green
+Square
+Tuna Salad
+1
+This test was the easiest test you've ever taken and you know it!
