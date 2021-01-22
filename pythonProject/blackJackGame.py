@@ -95,17 +95,67 @@ class Game(object):
             player  = BJ_Player(name)
             self.players.append(player)
     @property
-    def stillPlaying():
+    def stillPlaying(self):
         sp = []
         for player in self.players:
-            sp.append(player)
+            if not player.isBusted():
+                sp.append(player)
         return sp
-            
-#Testing Area:
-deck = BJ_Deck()
-deck.populate()
-deck.shuffle()
 
-card = deck.cards[0]
-print(card)
-print(card.value)
+    def __additional_cards(self, player):
+        while not player.isBusted and player.isHitting():
+            self.deck.deal([player], 1)
+            print(player)
+            if player.isBusted():
+                player.bust()
+    def play(self):
+        # deal 2 cards to all players and dealer
+        self.deck.deal(self.players+[self.dealer], 2)
+        self.dealer.flip_first_card()
+        print(self.dealer)
+
+        for player in self.players:
+            print(player)
+            self.__additional_cards(player)
+
+        # reveal dealer's first card
+        self.dealer.flip_first_card()
+        if not self.stillPlaying:
+            # Since all players have busted, just show the dealer's hand
+            print(self.dealer)
+        else:
+            # deal additional cards to dealer
+            print(self.dealer)
+            self.__additional_cards(self.dealer)
+            if self.dealer.isBusted():
+                for player in self.stillPlaying:
+                    player.win()
+            else:
+                for player in self.stillPlaying:
+                    if player.total > self.dealer.total:
+                        player.win()
+                    elif player.total < self.dealer.total:
+                        player.lose()
+                    else:
+                        player.push()
+        for player in self.players:
+            player.clear()
+        self.dealer.clear()
+
+
+def main():
+    print("\t\tWelcome to Blackjack!\n\t(Don't Gamble with real money)")
+    names = []
+    num_players = gf.getNum("How many players? (1 - 7):\n", 1, 8)
+    for i in range(num_players):
+        name = gf.getInput("What is your name?", 3, 13)
+        names.append(name)
+    game = Game(names)
+
+    play = None
+    while play != "n":
+        game.play()
+        play = gf.yesOrNo("You want to play again", 1, 5)
+
+
+main()

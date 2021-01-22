@@ -5,8 +5,8 @@ def slowText(text, speed = 0.03, wait = 0.2):
     """MAKES TYPING EFFECT TEXT"""
 
     for char in text:
-        time.sleep(speed)
         sys.stdout.write(char)
+        time.sleep(speed)
         sys.stdout.flush()
 
     time.sleep(wait)
