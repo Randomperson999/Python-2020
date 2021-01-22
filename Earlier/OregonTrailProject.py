@@ -1,6 +1,6 @@
 #OREGON TRAIL PROJECT
 #Anthony Garrard // Caleb Keller
-#started 11/20| Today is the day to fix the last problems. (Testing code: slowText("Ya game works") )
+#started 11/20| (Testing code: slowText("Ya game works") )
 import time
 import sys
 import datetime
@@ -196,7 +196,7 @@ def play():
     money = moneySetup(pClass)
     money, food, arrows, clothes, parts, horses = shop(money, food, arrows, clothes, parts, horses, len(party))
     while len(party) > 0 and totalMiles > 0:
-        turn(hp, food, totalMiles, arrows)
+        turn(hp, food, totalMiles, arrows, rations)
         if totalMiles <= 0:
             slowText("Congrats, you made it to the land of your desire!")
         elif len(party) <= 0:
@@ -427,9 +427,9 @@ def rest(hp, rations):
 
 
 
-def turn(hp, food, totalMiles, arrows):
+def turn(hp, food, totalMiles, arrows, rations):
     weather = random.choice(["hot", "good", "fair", "poor", "windy", "rain", "blizzard"])
-    mainChoice = getNumber("Would you like to \n(1) Rest \n(2) Hunt \n(3) Set Pace \n(4) Check Supplies \n(5) Continue Travel \n(6) Set Rations", 6,1)
+    mainChoice = getNumber("Would you like to:\n(1) Rest \n(2) Hunt \n(3) Set Pace \n(4) Check Supplies \n(5) Continue Travel \n(6) Set Rations", 6,1)
 
     if mainChoice == 1:
         hp = rest(hp)
