@@ -57,7 +57,7 @@ class App(Frame):
         if self.total < 150:
             self.lbl1["bg"] = "green"
             self.lbl1["bg"] = "green"
-        elif self.total > 150 and self.total < 200:
+        elif self.total >= 150 and self.total < 200:
             self.lbl1["bg"] = "yellow"
             self.lbl1["bg"] = "yellow"
         else:
