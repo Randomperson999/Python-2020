@@ -43,23 +43,25 @@ class App(Frame):
         password = self.passTb.get()
         if username.lower() in self.usernames:
             if password in self.passwords:
-                if self.trys <= 2:
+                if self.trys > 3:
+                    message = "\n\n\tAccount Locked"
+                else:
                     message = "\n\n\tAccess Granted"
                     self.trys = 0
-                else:
-                    message = "\n\n\tAccount Locked"
 
 
             else:
                 message = "\n\n\tIncorrect Password"
                 self.trys += 1
+                if self.trys > 3:
+                    message = "\n\n\tAccount Locked"
 
         else:
             message = "\n\n\tIncorrect Username"
             self.trys += 1
+            if self.trys >= 3:
+                message = "\n\n\tAccount Locked"
 
-        if self.trys > 3:
-            message = "\n\n\tWii will fight you, you iMpOsTeR!"
         self.output.delete(0.0, END)
         self.output.insert(0.0, message)
 
