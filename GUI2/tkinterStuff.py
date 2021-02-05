@@ -2,6 +2,7 @@
 # 1/28/2021
 # Tkinter Stuff
 from tkinter import *
+from tkinter.ttk import *
 from PIL import Image, ImageTk
 HEIGHT = 800
 WIDTH = 800
@@ -23,37 +24,37 @@ class App(Frame):
             self.texts(type, txt, isGrid, x1, y1, r, c)
         elif type == "entry":
             self.texts(type, txt, isGrid, x1, y1, r, c)
-        elif type == "bttn":
-            if isGrid == True:
-                Button(text=txt,
-                      bg=self.bg).grid(row=r,
-                                       column=c)
-            else:
-                Button(text=txt,
-                      bg=self.bg,
-                       command=cmmd).place(x=x1,
-                                        y=y1)
-        elif type == "rbttn":
-            if isGrid == True:
-                Radiobutton(text=txt,
-                     bg=self.bg,
-                            command=cmmd).grid(row=r,
-                                      column=c)
-            else:
-                Radiobutton(text=txt,
-                     bg=self.bg,
-                            command=cmmd).place(x=x1,
-                                       y=y1)
-        elif type == "cbttn":
-            if isGrid == True:
-                Checkbutton(text=txt,
-                     bg=self.bg).grid(row=r,
-                                      column=c)
-            else:
-                Checkbutton(text=txt,
-                     bg=self.bg,
-                            command=cmmd).place(x=x1,
-                                       y=y1)
+#      elif type == "bttn":
+##          if isGrid == True:
+##                Button(text=txt,
+##                      bg=self.bg).grid(row=r,
+##                                       column=c)
+##            else:
+##                Button(text=txt,
+##                      bg=self.bg,
+##                       command=cmmd).place(x=x1,
+##                                        y=y1)
+##        elif type == "rbttn":
+##            if isGrid == True:
+##                Radiobutton(text=txt,
+##                     bg=self.bg,
+##                            command=cmmd).grid(row=r,
+##                                      column=c)
+##            else:
+##                Radiobutton(text=txt,
+##                     bg=self.bg,
+##                            command=cmmd).place(x=x1,
+##                                       y=y1)
+##        elif type == "cbttn":
+##            if isGrid == True:
+##                Checkbutton(text=txt,
+##                     bg=self.bg).grid(row=r,
+##                                      column=c)
+##            else:
+##                Checkbutton(text=txt,
+##                     bg=self.bg,
+##                            command=cmmd).place(x=x1,
+##                                       y=y1)
         elif type == "list":
             if isGrid == True:
                 Listbox(text=txt,
@@ -76,6 +77,14 @@ class App(Frame):
                 self.imglbl2 = Label(self, image=logo2)
                 self.imglbl2.image = logo2
                 self.imglbl2.place(x=x1, y=y1)
+        elif type == "bttn" or type == "rbbtn" or type == "cbbtn":
+            bttns(type, txt, isGrid, x1, y1, r, c, cmmd)
+        elif type == "cmbx":
+            itemsList = [1, 2, 3, 4, 5, "hello"]
+            self.combobox = Combobox(self,
+                                     values= itemsList)
+            self.combobox.current(3)
+            self.combobox.pack(side=LEFT)
     # Widgets:
     def texts(self, type, txt, isGrid, x1, y1, r, c):
         if type == "lbl":
@@ -105,8 +114,8 @@ class App(Frame):
                 Entry(text=txt,
                      bg=bg).place(x=x1,
                                        y=y1)
-        elif type == "bttn" or type == "rbbtn" or type == "cbbtn":
-            bttns(type, txt, isGrid, x1, y1, r, c, cmmd)
+        
+            
     def bttns(self, type, txt="", isGrid=True, x1=10, y1=10, r=0, c=0, cmmd=None):
         if type == "bttn":
             if isGrid == True:
