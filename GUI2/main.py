@@ -24,7 +24,7 @@ class Main():
         root.geometry(str(width)+"x"+str(height))
         root.config(bg="grey")
         root = tks.App(root)
-        self.createWidgets(root)
+        self.createWidgets(self, root)
         root.mainloop()
 
 
