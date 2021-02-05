@@ -11,6 +11,7 @@ class App(Frame):
     def __init__(self, master):
         super(App, self).__init__(master)
         self.grid()
+        self.color = "white"
         self.total = 0
         self.colors = ["#FFFFFF","red", "blue", "green", "#000000"]
         self.colorIndex = 0
@@ -18,11 +19,11 @@ class App(Frame):
 
     def createWidgets(self):
         # Create all Widgets
-        self.lbl1 = Label(self, text = "Total People: ")
+        self.lbl1 = Label(self, text = "Total Clicks: ", bg=self.color)
         self.lbl2 = Label(self, text = str(self.total))
-        self.bttnAdd = Button(self, text = " +  Person")
+        self.bttnAdd = Button(self, text = " +  Click")
         self.bttnAdd.config(command = self.addToCount)
-        self.bttnMin = Button(self, text = " -  Person")
+        self.bttnMin = Button(self, text = " -  Click")
         self.bttnMin["command"] = self.minFromCount
         self.bttnColor = Button(self, text = "Change Color", command = self.changeColor, width = 30, height = 9)
 
@@ -49,30 +50,33 @@ class App(Frame):
         
     def changeColor(self):
         self.config(bg = self.colors[self.colorIndex])
+        self.color=self.colors[self.colorIndex]
+        if self.color == "#000000":
+            self.lbl1.config(bg=self.color, fg= "white")
+        else:
+            self.lbl1.config(bg=self.color, fg="#000000")
         self.colorIndex += 1
         if self.colorIndex > 4:
             self.colorIndex = 0
     
     def  changeLblColor(self):
         if self.total < 150:
-            self.lbl1["bg"] = "green"
-            self.lbl1["bg"] = "green"
+            self.lbl2["bg"] = "green"
         elif self.total >= 150 and self.total < 200:
-            self.lbl1["bg"] = "yellow"
-            self.lbl1["bg"] = "yellow"
+            self.lbl2["bg"] = "yellow"
         else:
-            self.lbl1["bg"] = "red"
-            self.lbl1["bg"] = "red"
+            self.lbl2["bg"] = "red"
         
 def main():
     root = Tk()
-    root.title("People in The Store")
+    root.title("Click App")
     root.geometry("200x250")
     root.resizable(0,0)
-    root.config(bg = "green")
+    root.config(bg = "white")
     app = App(root)
     
 
     #Kick off main loop
     root.mainloop()
-main()
+if __name__ =='__main__':
+    main()
