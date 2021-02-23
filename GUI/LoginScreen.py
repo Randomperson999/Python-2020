@@ -5,7 +5,6 @@
 # ---|Text Boxes|---
 
 from tkinter import *
-
 class App(Frame):
     def __init__(self, master):
         self.usernames = ["[name]"]
@@ -33,11 +32,21 @@ class App(Frame):
         self.loginBttn = Button(self, text="Login", width=12, bg="grey")
         self.loginBttn.grid(row=3, column=1, rowspan=2, sticky=E)
         self.loginBttn["command"] = self.submit
+
+        self.signBttn = Button(self, text="Sign Up", width = 12, bg="grey", command=self.signUp)
+        self.signBttn.grid(row=3, column=1, rowspan=2, sticky=W)
         self.output = Text(self)
         self.output.config(bg="#d3d3d3")
         self.output.grid(row=5, columnspan=3)
 
-
+    def signUp(self):
+        username = self.userTb.get()
+        password = self.passTb.get()
+        self.usernames.append(username)
+        self.passwords.append(password)
+        message = "\n\nAdded account:\n"+username+" "+password
+        self.output.delete(0.0, END)
+        self.output.insert(0.0, message)
     def submit(self):
         username = self.userTb.get()
         password = self.passTb.get()
@@ -48,8 +57,6 @@ class App(Frame):
                 else:
                     message = "\n\n\tAccess Granted"
                     self.trys = 0
-
-
             else:
                 message = "\n\n\tIncorrect Password"
                 self.trys += 1
@@ -64,8 +71,8 @@ class App(Frame):
 
         self.output.delete(0.0, END)
         self.output.insert(0.0, message)
-
-
+    def open(self):
+        ca.main()
 
 def main():
     root = Tk()
