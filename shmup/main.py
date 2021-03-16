@@ -5,6 +5,10 @@ import Colors as c
 from os import *
 
 
+
+
+
+# ###############
 # Game object classes
 ####################################################################
 
@@ -17,6 +21,7 @@ class Player(pg.sprite.Sprite):
         self.rect.centerx = (WIDTH / 2)
         self.rect.bottom = (HEIGHT - (HEIGHT * .05))
         self.speedx = 0
+
 
     def update(self):
         self.rect.x += self.speedx
@@ -71,20 +76,38 @@ class Bullet(pg.sprite.Sprite):
 class NPC(pg.sprite.Sprite):
     def __init__(self):
         super(NPC, self).__init__()
-        self.image = pg.Surface((25, 25))
-        self.image.fill(c.DARK_RED)
+        self.imageOrig = pg.Surface((25, 25))
+        self.imageOrig.fill(c.DARK_RED)
+        self.image = self.imageOrig.copy()
         self.rect = self.image.get_rect()
         self.rect.centerx = (WIDTH / 2)
         self.rect.top = (0)
         self.speedy = r.randint(1, 8)
         self.speedx = r.randint(-3, 3)
         self.ang = 0
+        self.rot = 0
+        self.rotSpeed = r.randint(-8, 8)
+        self.lastUpdate = pg.time.get_ticks()
 
     def update(self):
+        self.rotate()
         self.rect.y += self.speedy
         self.rect.x += self.speedx
+
         # self.circle(5)
         self.screenWrap()
+
+    def rotate(self):
+        now = pg.time.get_ticks()
+        if now - self.lastUpdate > 60:
+            self.lastUpdate = now
+            # do the rotation
+            self.rot = (self.rot+self.rotSpeed) % 360
+            newImage = pg.transform.rotate(self.imageOrig, self.rot)
+            oldCenter = self.rect.center
+            self.image = newImage
+            self.rect = self.image.get_rect()
+            self.rect.center = oldCenter
 
     def spawn(self):
         npc = NPC()
@@ -116,8 +139,15 @@ class NPC(pg.sprite.Sprite):
     #     self.screenWrap()
 
 ####################################################################
-
-
+# game functions:
+####################################################################
+def drawText(surf, text, size, x, y, color):
+    font = pg.font.Font(font_name, size)
+    textSurface = font.render(text, True, color)
+    textRect = textSurface.get_rect()
+    textRect.midtop = (x, y)
+    surf.blit(textSurface, textRect)
+####################################################################
 # Game Constants
 ####################################################################
 HEIGHT = 900
@@ -126,6 +156,7 @@ FPS = 60
 
 
 title = "Shmup"
+font_name = pg.font.match_font("arial")
 
 ####################################################################
 
@@ -156,16 +187,14 @@ bullet_group = pg.sprite.Group()
 ####################################################################
 player = Player()
 npc = NPC()
-# for i in range(10):
-#     npc = NPC()
-#     npc_group.add(npc)
-bullet = Bullet(100, WIDTH/2)
+for i in range(10):
+    npc = NPC()
+    npc_group.add(npc)
 ####################################################################
 
 # add objects to sprite groups
 ####################################################################
 players_group.add(player)
-bullet_group.add(bullet)
 npc_group.add(npc)
 
 for i in players_group:
@@ -182,7 +211,7 @@ for i in bullet_group:
 # game update Variables
 ########################################
 playing = True
-
+score = 0
 ########################################
 ################################################################
 while playing:
@@ -217,21 +246,24 @@ while playing:
     # if bullet hits npc
     hits = pg.sprite.groupcollide(npc_group, bullet_group, True, True)
     for hit in hits:
+        # score += 50 - hit.radius
+        score += 10
         npc.spawn()
+
+
     ##################################################
     # Render
     ##################################################
 
     screen.fill(c.BLACK)
     all_sprites.draw(screen)
-
+    # draw hud
+    drawText(screen, "Score: "+str(score), 18, WIDTH/2, 10, c.DARK_RED)
     pg.display.flip()
+
     ##################################################
 
 pg.quit()
 ################################################################
 #####################
 
-# # # R U L E S # # #
-# a certain number of ships kills you.
-# When you destroy all asteroids, a new level starts
