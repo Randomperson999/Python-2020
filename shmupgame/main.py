@@ -49,15 +49,19 @@ clock = pg.time.Clock()
 class Player(pg.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
+        self.sheild = 100
         # self.image = pg.Surface((50, 40))
         # self.image.fill(c.DARK_PURPLE)
         self.image = playerImg
         self.image = pg.transform.scale(self.image, (80, 80))
         self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
+        self.radius = int(self.rect.width*.75 /2)
         self.rect.centerx = (WIDTH / 2)
         self.rect.bottom = (HEIGHT - (HEIGHT * .05))
         self.speedx = 0
+        self.shootDelay = 200
+        self.lastShot = pg.time.get_ticks()
 
 
     def update(self):
@@ -75,8 +79,8 @@ class Player(pg.sprite.Sprite):
                 self.speedx = 0
             if pg.KEYUP == pg.K_RIGHT or pg.K_d:
                 self.speedx = 0
-        # if keystate[pg.K_SPACE]:
-        #     self.shoot()
+        if keystate[pg.K_SPACE]:
+            self.shoot()
         self.wallBorder()
     def wallBorder(self):
 
@@ -89,9 +93,15 @@ class Player(pg.sprite.Sprite):
         if self.rect.top <= 0:
             self.rect.top = 0
     def shoot(self):
-        b = Bullet(self.rect.centerx, self.rect.top+1)
-        all_sprites.add(b)
-        bullet_group.add(b)
+        now = pg.time.get_ticks()
+        if now - self.lastShot > self.shootDelay:
+            self.lastShot = now
+            b = Bullet(self.rect.centerx, self.rect.top + 1)
+            all_sprites.add(b)
+            bullet_group.add(b)
+
+    def hurt(self):
+        pass
 
 
 class Bullet(pg.sprite.Sprite):
@@ -117,12 +127,10 @@ class Bullet(pg.sprite.Sprite):
 class NPC(pg.sprite.Sprite):
     def __init__(self):
         super(NPC, self).__init__()
- #HEAD
         # self.image = pg.Surface((25, 25))
         # self.image.fill(c.DARK_RED)
 
-        self.imageOrig = mpcImg
-        self.imageOrig = pg.transform.scale(self.imageOrig, (40, 40))
+        self.imageOrig = npcImg
         self.image = self.imageOrig.copy()
         self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
@@ -190,6 +198,8 @@ class NPC(pg.sprite.Sprite):
 ####################################################################
 # game functions:
 ####################################################################
+
+
 def drawText(surf, text, size, x, y, color):
     font = pg.font.Font(font_name, size)
     textSurface = font.render(text, True, color)
@@ -197,6 +207,17 @@ def drawText(surf, text, size, x, y, color):
     textRect.midtop = (x, y)
     surf.blit(textSurface, textRect)
 
+
+def draw_bar(surf, x, y, pct):
+    if pct < 0:
+        pct = 0
+    barLen = 100
+    barHeight = 10
+    fill = (pct/100)*barLen
+    outlineRect = pg.Rect(x, y, barLen, barHeight)
+    fillRect = pg.Rect(x, y, fill, barHeight)
+    pg.draw.rect(surf, c.DARKISH_PURPLE, fillRect)
+    pg.draw.rect(surf, c.DARK_RED, outlineRect, 2)
 
 ####################################################################
 # Game Constants
@@ -226,10 +247,21 @@ clock = pg.time.Clock()
 background = pg.image.load(path.join(bg_folder, "bg.png")).convert()
 bgRect = background.get_rect()
 playerImg = pg.image.load(path.join(player_imgs_folder, "player.png")).convert()
-mpcImg = pg.image.load(path.join(enemy_imgs_folder, "asteroid.png")).convert()
+asteroidImages = []
+npcList = [pg.image.load(path.join(enemy_imgs_folder, "asteroid.png")).convert(),
+           pg.image.load(path.join(enemy_imgs_folder, "asteroid2.png")).convert(),
+           pg.image.load(path.join(enemy_imgs_folder, "asteroid3.png")).convert()]
+npcImg = r.choice(npcList)
+
+
 bulletImg = pg.image.load(path.join(player_imgs_folder, "bullet.png")).convert()
 ####################################################################
+# load sounds
+####################################################################
 
+# shoot_snd = pg.mixer.Sound(path.join(sounds_folder, "shoot.wav"))
+
+####################################################################
 # create Sprite groups
 ####################################################################
 all_sprites = pg.sprite.Group()
@@ -281,8 +313,8 @@ while playing:
     # Quiting the game when we hit the x
     for event in pg.event.get():
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
-                player.shoot()
+            # if event.key == pg.K_SPACE:
+            #     player.shoot()
             if event.key == pg.K_ESCAPE:
                 playing = False
         if event.type == pg.QUIT:
@@ -297,11 +329,17 @@ while playing:
     hits = pg.sprite.spritecollide(player, npc_group, True)
     # hits = pg.sprite.spritecollide(player, npc_group, True, pg.sprite.collide_circle())
 
-    if hits:
+    for hit in hits:
         # playing = False
         npc.spawn()
         fails += 1
-        print("B A D : "+str(fails))
+        player.sheild -= hit.radius*2
+        if player.sheild <=0:
+            playing = False
+        # print("B A D : "+str(fails))
+        # if fails > 2:
+        #     print("You lost")
+        #     playing = False
     # if bullet hits npc
     hits = pg.sprite.groupcollide(npc_group, bullet_group, True, True)
     for hit in hits:
@@ -318,6 +356,7 @@ while playing:
     all_sprites.draw(screen)
     # draw hud
     drawText(screen, "Score: "+str(score), 18, WIDTH/2, 10, c.DARK_RED)
+    draw_bar(screen, 5, 10, player.sheild)
     pg.display.flip()
 
     ##################################################
