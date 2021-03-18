@@ -1,18 +1,55 @@
+# Caleb Keller
+# 3/12/2021
+# Asteroid like game
 import pygame as pg
 import random as r
 import math
 import Colors as c
 from os import *
 
+# Game Constants
+####################################################################
+HEIGHT = 700
+WIDTH = 600
+FPS = 60
+
+
+title = "Shmup"
+
+####################################################################
+
+# Folders
+####################################################################
+game_folder = path.dirname(__file__)
+imgs_folder = path.join(game_folder, "images")
+player_imgs_folder = path.join(imgs_folder, "player")
+enemy_imgs_folder = path.join(imgs_folder, "enemy")
+bg_folder = path.join(imgs_folder, "background")
+scores_folder = path.join(game_folder, "scores")
+sounds_folder = path.join(game_folder, "sounds")
+####################################################################
+# initialize pygame and create window
+####################################################################
+pg.init()
+pg.mixer.init()
+
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+pg.display.set_caption(title)
+clock = pg.time.Clock()
+####################################################################
 
 # Game object classes
 ####################################################################
 
+
 class Player(pg.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.image = pg.Surface((50, 40))
-        self.image.fill(c.DARK_PURPLE)
+        # self.image = pg.Surface((50, 40))
+        # self.image.fill(c.DARK_PURPLE)
+        self.image = playerImg
+        self.image = pg.transform.scale(self.image, (90, 90))
+        self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.rect.centerx = (WIDTH / 2)
         self.rect.bottom = (HEIGHT - (HEIGHT * .05))
@@ -55,8 +92,11 @@ class Player(pg.sprite.Sprite):
 class Bullet(pg.sprite.Sprite):
     def __init__(self, x, y):
         super(Bullet, self).__init__()
-        self.image = pg.Surface((5, 10))
-        self.image.fill(c.PURPLE)
+        # self.image = pg.Surface((5, 10))
+        # self.image.fill(c.PURPLE)
+        self.image = bulletImg
+        self.image = pg.transform.scale(self.image, (5, 10))
+        self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.rect.bottom = y
         self.rect.centerx = x
@@ -68,13 +108,19 @@ class Bullet(pg.sprite.Sprite):
             self.kill()
             # print("kill")
 
+
 class NPC(pg.sprite.Sprite):
     def __init__(self):
         super(NPC, self).__init__()
-        self.image = pg.Surface((25, 25))
-        self.image.fill(c.DARK_RED)
+        # self.image = pg.Surface((25, 25))
+        # self.image.fill(c.DARK_RED)
+        self.image = mpcImg
+        self.image = pg.transform.scale(self.image, (40, 40))
+        self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
-        self.rect.centerx = (WIDTH / 2)
+        self.radius = int(self.rect.width*.75 /2)
+        # pg.draw.circle(self.image, c.RED, self.rect.center, self.radius)
+        self.rect.centerx = ((WIDTH / 2)+r.randint(-100, 100))
         self.rect.top = (0)
         self.speedy = r.randint(1, 8)
         self.speedx = r.randint(-3, 3)
@@ -99,7 +145,7 @@ class NPC(pg.sprite.Sprite):
         if self.rect.bottom > HEIGHT:
             self.rect.top = 0
             self.rect.centerx = r.randint(10, 550)
-            self.speedy = r.randint(2, 5)
+            self.speedy = r.randint(1, 3)
             self.speedx = r.randint(-3, 3)
         # if self.rect.top < 0:
         #     self.rect.top = 0
@@ -116,32 +162,14 @@ class NPC(pg.sprite.Sprite):
     #     self.screenWrap()
 
 ####################################################################
-
-
-# Game Constants
-####################################################################
-HEIGHT = 900
-WIDTH = 600
-FPS = 60
-
-
-title = "Shmup"
-
-####################################################################
-
-# initialize pygame and create window
-####################################################################
-pg.init()
-pg.mixer.init()
-
-screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption(title)
-clock = pg.time.Clock()
-####################################################################
-
 # load imgs
 ####################################################################
-
+# I haven't made these yet, so it won't work.
+background = pg.image.load(path.join(bg_folder, "bg.png")).convert()
+bgRect = background.get_rect()
+playerImg = pg.image.load(path.join(player_imgs_folder, "player.png")).convert()
+mpcImg = pg.image.load(path.join(enemy_imgs_folder, "asteroid.png")).convert()
+bulletImg = pg.image.load(path.join(player_imgs_folder, "bullet.png")).convert()
 ####################################################################
 
 # create Sprite groups
@@ -156,9 +184,9 @@ bullet_group = pg.sprite.Group()
 ####################################################################
 player = Player()
 npc = NPC()
-# for i in range(10):
-#     npc = NPC()
-#     npc_group.add(npc)
+for i in range(5):
+    npc = NPC()
+    npc_group.add(npc)
 bullet = Bullet(100, WIDTH/2)
 ####################################################################
 
@@ -176,7 +204,7 @@ for i in bullet_group:
     all_sprites.add(i)
 ####################################################################
 
-
+fails = 0
 # Game Loop
 ###################
 # game update Variables
@@ -198,7 +226,7 @@ while playing:
     for event in pg.event.get():
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_SPACE:
-                player.shoot( )
+                player.shoot()
             if event.key == pg.K_ESCAPE:
                 playing = False
         if event.type == pg.QUIT:
@@ -210,10 +238,14 @@ while playing:
     all_sprites.update()
 
     # if npc hits plyr
-    hits = pg.sprite.spritecollide(player, npc_group, False)
+    hits = pg.sprite.spritecollide(player, npc_group, True)
+    # hits = pg.sprite.spritecollide(player, npc_group, True, pg.sprite.collide_circle())
+
     if hits:
-        playing = False
+        # playing = False
         npc.spawn()
+        fails += 1
+        print("B A D : "+str(fails))
     # if bullet hits npc
     hits = pg.sprite.groupcollide(npc_group, bullet_group, True, True)
     for hit in hits:
@@ -223,6 +255,7 @@ while playing:
     ##################################################
 
     screen.fill(c.BLACK)
+    screen.blit(background, bgRect)
     all_sprites.draw(screen)
 
     pg.display.flip()
@@ -232,6 +265,3 @@ pg.quit()
 ################################################################
 #####################
 
-# # # R U L E S # # #
-# a certain number of ships kills you.
-# When you destroy all asteroids, a new level starts
