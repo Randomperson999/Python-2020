@@ -52,7 +52,7 @@ class Player(pg.sprite.Sprite):
         # self.image = pg.Surface((50, 40))
         # self.image.fill(c.DARK_PURPLE)
         self.image = playerImg
-        self.image = pg.transform.scale(self.image, (90, 90))
+        self.image = pg.transform.scale(self.image, (80, 80))
         self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.rect.centerx = (WIDTH / 2)
@@ -117,17 +117,14 @@ class Bullet(pg.sprite.Sprite):
 class NPC(pg.sprite.Sprite):
     def __init__(self):
         super(NPC, self).__init__()
-<<<<<<< HEAD
+ #HEAD
         # self.image = pg.Surface((25, 25))
         # self.image.fill(c.DARK_RED)
-        self.image = mpcImg
-        self.image = pg.transform.scale(self.image, (40, 40))
-        self.image.set_colorkey(c.BLACK)
-=======
-        self.imageOrig = pg.Surface((25, 25))
-        self.imageOrig.fill(c.DARK_RED)
+
+        self.imageOrig = mpcImg
+        self.imageOrig = pg.transform.scale(self.imageOrig, (40, 40))
         self.image = self.imageOrig.copy()
->>>>>>> c033e5a8b832f27542ab647d9604d53e39a37e27
+        self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width*.75 /2)
         # pg.draw.circle(self.image, c.RED, self.rect.center, self.radius)
@@ -157,6 +154,7 @@ class NPC(pg.sprite.Sprite):
             newImage = pg.transform.rotate(self.imageOrig, self.rot)
             oldCenter = self.rect.center
             self.image = newImage
+            self.image.set_colorkey(c.BLACK)
             self.rect = self.image.get_rect()
             self.rect.center = oldCenter
 
@@ -190,8 +188,6 @@ class NPC(pg.sprite.Sprite):
     #     self.screenWrap()
 
 ####################################################################
-<<<<<<< HEAD
-=======
 # game functions:
 ####################################################################
 def drawText(surf, text, size, x, y, color):
@@ -200,10 +196,12 @@ def drawText(surf, text, size, x, y, color):
     textRect = textSurface.get_rect()
     textRect.midtop = (x, y)
     surf.blit(textSurface, textRect)
+
+
 ####################################################################
 # Game Constants
 ####################################################################
-HEIGHT = 900
+HEIGHT = 700
 WIDTH = 600
 FPS = 60
 
@@ -223,10 +221,8 @@ pg.display.set_caption(title)
 clock = pg.time.Clock()
 ####################################################################
 
->>>>>>> c033e5a8b832f27542ab647d9604d53e39a37e27
 # load imgs
 ####################################################################
-# I haven't made these yet, so it won't work.
 background = pg.image.load(path.join(bg_folder, "bg.png")).convert()
 bgRect = background.get_rect()
 playerImg = pg.image.load(path.join(player_imgs_folder, "player.png")).convert()
@@ -246,16 +242,9 @@ bullet_group = pg.sprite.Group()
 ####################################################################
 player = Player()
 npc = NPC()
-<<<<<<< HEAD
 for i in range(5):
     npc = NPC()
     npc_group.add(npc)
-bullet = Bullet(100, WIDTH/2)
-=======
-for i in range(10):
-    npc = NPC()
-    npc_group.add(npc)
->>>>>>> c033e5a8b832f27542ab647d9604d53e39a37e27
 ####################################################################
 
 # add objects to sprite groups
@@ -324,7 +313,6 @@ while playing:
     ##################################################
     # Render
     ##################################################
-
     screen.fill(c.BLACK)
     screen.blit(background, bgRect)
     all_sprites.draw(screen)
