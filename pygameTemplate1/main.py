@@ -14,7 +14,7 @@ imgFolder = os.path.join(gameFolder, "imgs")
 sndFolder = os.path.join(gameFolder, "snds")
 
 # load in game imgs
-playerImg = pygame.image.load((os.path.join(imgFolder, "Capture.png"))).convert()
+# playerImg = pygame.image.load((os.path.join(imgFolder, "Capture.png"))).convert()
 
 # Constants
 HEIGHT = 400
@@ -105,7 +105,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
 
-        # self.image = pygame.Surface((25, 50))
+        self.image = pygame.Surface((25, 50))
         self.image.fill(c.DEEP_RED)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
