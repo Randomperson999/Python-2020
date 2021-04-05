@@ -137,8 +137,8 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.y += self.speedY
         self.rect.x += self.speedX
-        # if self.speedX !=0:
-        #     self.circle(150)
+        if self.speedX !=0:
+            self.circle(60)
 
         # grid
         # keystate = pygame.key.get_pressed()
@@ -211,6 +211,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.bottom = HEIGHT
 
+
 def spw_new_player(x, y):
     newplayer = Player()
     newplayer.rect.center = (x, y)
@@ -255,11 +256,12 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and player.rect.collidepoint(pygame.mouse.get_pos()):
             mouse_bttn_held = True
 
-            print(str.format("({0}, {1})", mousex, mousey))
+            # print(str.format("({0}, {1})", mousex, mousey))
 
         if event.type == pygame.MOUSEBUTTONUP and mouse_bttn_held == True:
             mouse_bttn_held = False
-            spw_new_player(mousex, mousey)
+            for i in range(10):
+                spw_new_player(mousex, mousey)
 
         # check for window closing
         if event.type == pygame.QUIT:
