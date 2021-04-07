@@ -69,6 +69,7 @@ class Player(pg.sprite.Sprite):
         self.rect.centerx = (WIDTH / 2)
         self.rect.bottom = (HEIGHT - (HEIGHT * .05))
         self.speedx = 0
+        self.speedy = 0
         self.shootDelay = 200
         self.lastShot = pg.time.get_ticks()
         self.lives = 3
@@ -76,17 +77,21 @@ class Player(pg.sprite.Sprite):
         self.hidden = False
         self.powerLevel = 1
         self.powTimer = pg.time.get_ticks()
+        self.invulnerableTimer = pg.time.get_ticks()
         self.invulnerable = False
-        self.invulnrableTimer = pg.time.get_ticks()
+        self.ships_num = 1
 
     def hide(self):
         # hide player temporarily
         print("hidden")
         self.lives -= 1
+        print(str.format("lives: {}", self.lives))
         self.hidden = True
         self.hideTimer = pg.time.get_ticks()
+        self.invulnerableTimer = pg.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
         self.invulnerable = True
+        print("invulnerable?")
 
     def update(self):
         # time out powerups
@@ -101,22 +106,39 @@ class Player(pg.sprite.Sprite):
             self.rect.bottom = (HEIGHT - (HEIGHT * .05))
             self.rect.centerx = (WIDTH/2)
             self.sheild = 100
-        if pg.time.get_ticks() - self.invulnrableTimer > 5000:
+            print(str.format("invulnerable?: {}", self.invulnerable))
+
+        if pg.time.get_ticks() - self.invulnerableTimer > 5000:
             self.invulnerable = False
+        # print(str.format("invulnerable?: {}", self.invulnerable))
+
         self.rect.x += self.speedx
+        self.rect.y += self.speedy
 
         # flow movement
         self.speedx = 0
+        self.speedy = 0
         keystate = pg.key.get_pressed()
         if keystate[pg.K_LEFT] or keystate[pg.K_a]:
             self.speedx = -5
         if keystate[pg.K_RIGHT] or keystate[pg.K_d]:
             self.speedx = 5
+        if keystate[pg.K_w] or keystate[pg.K_UP]:
+            if self.rect.y > 500:
+                self.speedy = -5
+        if keystate[pg.K_s] or keystate[pg.K_DOWN]:
+            self.speedy = 5
+
         if keystate == pg.KEYUP:
             if pg.KEYUP == pg.K_LEFT or pg.K_a:
                 self.speedx = 0
             if pg.KEYUP == pg.K_RIGHT or pg.K_d:
                 self.speedx = 0
+            if pg.KEYUP == pg.K_UP or pg.K_w:
+                self.speedy = 0
+            if pg.KEYUP == pg.K_DOWN or pg.s:
+                self.speedy = 0
+
         if keystate[pg.K_SPACE]:
             self.shoot()
         self.wallBorder()
@@ -125,8 +147,9 @@ class Player(pg.sprite.Sprite):
             self.rect.right = WIDTH
         if self.rect.left <= 0:
             self.rect.left = 0
-        # if self.rect.bottom >= HEIGHT:
-        #     self.rect.bottom = HEIGHT
+        if self.rect.bottom >= HEIGHT:
+            if not self.hidden:
+                self.rect.bottom = HEIGHT
         # if self.rect.top <= 0:
         #     self.rect.top = 0
     def shoot(self):
@@ -142,9 +165,25 @@ class Player(pg.sprite.Sprite):
             if self.powerLevel == 5:
                 self.shootDelay = 50
 
-            b = Bullet(self.rect.centerx, self.rect.top + 1)
-            all_sprites.add(b)
-            bullet_group.add(b)
+            if self.ships_num == 1 or ships_num == 3:
+                b = Bullet(self.rect.centerx, self.rect.top + 1)
+                all_sprites.add(b)
+                bullet_group.add(b)
+            if self.ships_num == 2:
+                b = Bullet(self.rect.centerx+20, self.rect.top + 1)
+                all_sprites.add(b)
+                bullet_group.add(b)
+
+                b = Bullet(self.rect.centerx - 20, self.rect.top+12)
+                all_sprites.add(b)
+                bullet_group.add(b)
+            if self.ships_num == 3:
+                b = Bullet(self.rect.centerx + 40, self.rect.top+12)
+                all_sprites.add(b)
+                bullet_group.add(b)
+                b = Bullet(self.rect.centerx - 40, self.rect.top + 12)
+                all_sprites.add(b)
+                bullet_group.add(b)
     def shieldUp(self, num):
         player.sheild += num
         if player.sheild >= 100:
@@ -154,6 +193,21 @@ class Player(pg.sprite.Sprite):
         self.powerLevel += 1
         self.powTimer = pg.time.get_ticks()
 
+    def newShip(self):
+        oldcenter = self.rect.center
+        self.ships_num += 1
+        if self.ships_num > 3:
+            self.ships_num = 3
+        if self.ships_num == 2:
+            self.image = playerImg2
+            self.image = pg.transform.scale(self.image, (120, 93))
+        if self.ships_num == 3:
+            self.image = playerImg3
+            self.image = pg.transform.scale(self.image, (160, 93))
+        self.image.set_colorkey(c.BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.center = oldcenter
+        self.radius = int(self.rect.width * .85 / 2)
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, x, y):
@@ -270,7 +324,7 @@ class Explosion(pg.sprite.Sprite):
     def update(self):
         now = pg.time.get_ticks()
         if now - self.lastUpdate > self.frameRate:
-            self.lastUpdate =  now
+            self.lastUpdate = now
             self.frame += 1
             if self.frame == len(explosion_anim[self.size]):
                 self.kill()
@@ -343,8 +397,9 @@ def gameOver_screen():
     while waiting:
         clock.tick(FPS)
         for event in pg.event.get():
-            if event == pg.QUIT:
+            if event.type == pg.QUIT:
                 pg.quit()
+                print("test")
             if event.type == pg.KEYUP:
                 waiting = False
 
@@ -367,6 +422,8 @@ clock = pg.time.Clock()
 background = pg.image.load(path.join(bg_folder, "bg.png")).convert()
 bgRect = background.get_rect()
 playerImg = pg.image.load(path.join(player_imgs_folder, "player.png")).convert()
+playerImg2 = pg.image.load(path.join(player_imgs_folder, "player2.png")).convert()
+playerImg3 = pg.image.load(path.join(player_imgs_folder, "player3.png")).convert()
 playerMiniImage = pg.transform.scale(playerImg, (25, 19))
 playerMiniImage.set_colorkey(c.BLACK)
 asteroidImages = []
@@ -402,14 +459,7 @@ shoot_snd = pg.mixer.Sound(path.join(sounds_folder, "shoot.wav"))
 expl_sound = pg.mixer.Sound(path.join(sounds_folder, "explosion1.wav"))
 
 ####################################################################
-# create Sprite groups
-####################################################################
-all_sprites = pg.sprite.Group()
-players_group = pg.sprite.Group()
-npc_group = pg.sprite.Group()
-bullet_group = pg.sprite.Group()
-pows_group = pg.sprite.Group()
-####################################################################
+
 
 
 
@@ -420,13 +470,22 @@ fails = 0
 ########################################
 playing = True
 gameOver = True
-score = 0
+
 ########################################
 ################################################################
 while playing:
     if gameOver:
         gameOver_screen()
         gameOver = False
+        score = 0
+        # create Sprite groups
+        ####################################################################
+        all_sprites = pg.sprite.Group()
+        players_group = pg.sprite.Group()
+        npc_group = pg.sprite.Group()
+        bullet_group = pg.sprite.Group()
+        pows_group = pg.sprite.Group()
+        ####################################################################
         # create Game Objects
         ####################################################################
         player = Player()
@@ -485,6 +544,9 @@ while playing:
             player.sheild -= hit.radius*2
             if player.sheild <= 0:
                 player.hide()
+                if player.lives <= 0:
+                    gameOver = True
+
         else:
             print("invulnerable")
 
@@ -496,6 +558,15 @@ while playing:
     for hit in hits:
         # score += 50 - hit.radius
         score += 10
+        # make a new ship if high enough points (starting at 5000)
+        if score == 5000:
+            player.newShip()
+            ships_num = 2
+            print(player.ships_num)
+        elif score == 20000:
+            player.newShip()
+            ships_num = 3
+            print(player.ships_num)
         expl = Explosion(hit.rect.center, "lg")
         expl_sound.play()
         all_sprites.add(expl)
