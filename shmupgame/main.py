@@ -85,13 +85,14 @@ class Player(pg.sprite.Sprite):
         # hide player temporarily
         print("hidden")
         self.lives -= 1
+        self.powerLevel = 1
         print(str.format("lives: {}", self.lives))
         self.hidden = True
         self.hideTimer = pg.time.get_ticks()
         self.invulnerableTimer = pg.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
         self.invulnerable = True
-        print("invulnerable?")
+        # print("invulnerable?")
 
     def update(self):
         # time out powerups
@@ -106,7 +107,7 @@ class Player(pg.sprite.Sprite):
             self.rect.bottom = (HEIGHT - (HEIGHT * .05))
             self.rect.centerx = (WIDTH/2)
             self.sheild = 100
-            print(str.format("invulnerable?: {}", self.invulnerable))
+            # print(str.format("invulnerable?: {}", self.invulnerable))
 
         if pg.time.get_ticks() - self.invulnerableTimer > 5000:
             self.invulnerable = False
@@ -208,7 +209,15 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = oldcenter
         self.radius = int(self.rect.width * .85 / 2)
-
+    def oldShip(self):
+        oldcenter = self.rect.center
+        self.ships_num = 1
+        self.image = playerImg
+        self.image = pg.transform.scale(self.image, (80, 80))
+        self.image.set_colorkey(c.BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.center = oldcenter
+        self.radius = int(self.rect.width * .85 / 2)
 class Bullet(pg.sprite.Sprite):
     def __init__(self, x, y):
         super(Bullet, self).__init__()
@@ -235,10 +244,10 @@ class NPC(pg.sprite.Sprite):
         # self.image = pg.Surface((25, 25))
         # self.image.fill(c.DARK_RED)
         npcImg = r.choice(npcList)
+        self.sizeChange = r.randint(50, 150)
         self.imageOrig = npcImg
-        sizeChange = r.randint(20, 90)
         self.imageOrig = pg.transform.scale(self.imageOrig,
-                                            (30+sizeChange, 30+sizeChange))
+                                            (self.sizeChange, self.sizeChange))
         self.image = self.imageOrig.copy()
         self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
@@ -274,6 +283,10 @@ class NPC(pg.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.center = oldCenter
 
+    # def sizeChanging(self):
+    #     self.sizeChange = r.randint(50, 150)
+    #     return self.sizeChange
+
     def spawn(self):
         npc = NPC()
         npc_group.add(npc)
@@ -281,19 +294,25 @@ class NPC(pg.sprite.Sprite):
 
     def screenWrap(self):
         if self.rect.right > WIDTH+10:
-            # self.rect.top = self.rect.y+15
-            self.rect.left = -10
-            self.speedy = r.randint(1, 3)
+            # self.rect.left = -10
+            # self.speedy = r.randint(1, 3)
+            # self.speedx = r.randint(-3, 3)
+            self.rect.top = 0
+            self.rect.centerx = r.randint(5, 555)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         if self.rect.left < -10:
-            # self.rect.top = self.rect.y+15
-            self.rect.right = WIDTH+10
-            self.speedy = r.randint(1, 3)
+            # self.rect.right = WIDTH+10
+            # self.speedy = r.randint(1, 3)
+            # self.speedx = r.randint(-3, 3)
+            self.rect.top = 0
+            self.rect.centerx = r.randint(5, 555)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         if self.rect.bottom > HEIGHT:
             self.rect.top = 0
-            self.rect.centerx = r.randint(10, 550)
-            self.speedy = r.randint(1, 3)
+            self.rect.centerx = r.randint(5, 555)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         # if self.rect.top < 0:
         #     self.rect.top = 0
@@ -314,7 +333,9 @@ class Explosion(pg.sprite.Sprite):
     def __init__(self, center, size):
         super(Explosion, self).__init__()
         self.size = size
+        # self.explSize = NPC.sizeChanging(NPC)
         self.image = explosion_anim[self.size][0]
+        # self.image = pg.transform.scale(self.image, (self.explSize, self.explSize))
         self.rect = self.image.get_rect()
         self.rect.center = center
         self.frame = 0
@@ -331,6 +352,8 @@ class Explosion(pg.sprite.Sprite):
             else:
                 center = self.rect.center
                 self.image = explosion_anim[self.size][self.frame]
+                # if self.size == "lg":
+                    # self.image = pg.transform.scale(self.image, (self.explSize, self.explSize))
                 self.rect = self.image.get_rect()
                 self.rect.center = center
 
@@ -399,7 +422,7 @@ def gameOver_screen():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                print("test")
+                # print("test")
             if event.type == pg.KEYUP:
                 waiting = False
 
@@ -434,14 +457,19 @@ animationsFolder = path.join(imgs_folder, "animations")
 explosion_anim = {}
 explosion_anim["lg"] = []
 explosion_anim["sm"] = []
+explosion_anim["xl"] = []
+
+
 for i in range(9):
     fn = "regularExplosion0{}.png".format(i)
     img = pg.image.load(path.join(animationsFolder, fn)).convert()
     img.set_colorkey(c.BLACK)
+    img_xl = pg.transform.scale(img, (150, 150))
     img_lg = pg.transform.scale(img, (100, 100))
     img_sm = pg.transform.scale(img, (40, 40))
     explosion_anim["sm"].append(img_sm)
     explosion_anim["lg"].append(img_lg)
+    explosion_anim["xl"].append((img_xl))
 
 bulletImg = pg.image.load(path.join(player_imgs_folder, "bullet.png")).convert()
 
@@ -478,6 +506,7 @@ while playing:
         gameOver_screen()
         gameOver = False
         score = 0
+        combo = 0
         # create Sprite groups
         ####################################################################
         all_sprites = pg.sprite.Group()
@@ -490,7 +519,7 @@ while playing:
         ####################################################################
         player = Player()
         npc = NPC()
-        for i in range(10):
+        for i in range(15):
             npc = NPC()
             npc_group.add(npc)
         ####################################################################
@@ -544,11 +573,14 @@ while playing:
             player.sheild -= hit.radius*2
             if player.sheild <= 0:
                 player.hide()
+                combo = 0
+                player.oldShip()
                 if player.lives <= 0:
                     gameOver = True
 
         else:
-            print("invulnerable")
+            # print("invulnerable")
+            pass
 
 
 
@@ -558,20 +590,25 @@ while playing:
     for hit in hits:
         # score += 50 - hit.radius
         score += 10
+        combo += 1
         # make a new ship if high enough points (starting at 5000)
-        if score == 5000:
+        if combo == 1000:
             player.newShip()
             ships_num = 2
             print(player.ships_num)
-        elif score == 20000:
+        elif combo == 5000:
             player.newShip()
             ships_num = 3
             print(player.ships_num)
-        expl = Explosion(hit.rect.center, "lg")
+        if hit.radius >= 50:
+            expl = Explosion(hit.rect.center, "xl")
+            print("aah")
+        else:
+            expl = Explosion(hit.rect.center, "lg")
         expl_sound.play()
         all_sprites.add(expl)
         npc.spawn()
-        if r.random() > .95:
+        if r.random() > .98:
             pow = Pow(hit.rect.center)
             all_sprites.add(pow)
             pows_group.add(pow)
@@ -593,6 +630,7 @@ while playing:
     all_sprites.draw(screen)
     # draw hud
     drawText(screen, "Score: "+str(score), 18, WIDTH/2, 10, c.DARK_RED)
+    drawText(screen, "Combo: "+str(combo), 12, WIDTH/2, 30, c.KINDA_DARK_PURPLE)
     draw_bar(screen, 5, 10, player.sheild)
     drawLives(screen, WIDTH-100, 10, player.lives, playerMiniImage)
     pg.display.flip()
