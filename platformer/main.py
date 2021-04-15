@@ -4,7 +4,7 @@ import math as m
 import os
 from settings import *
 from sprites import *
-from sprites.sprites import *
+
 
 class Game(object):
     def __init__(self):
@@ -23,13 +23,17 @@ class Game(object):
 
         self.allSprites = pg.sprite.Group()
         self.playersGroup = pg.sprite.Group()
-
+        self.platforms = pg.sprite.Group
         # game objects
         self.player = Player()
+        self.p1 = Platform(0, HEIGHT - 30, WIDTH, 20)
+
 
         # add objects to sprite groups
         self.allSprites.add(self.player)
         self.playersGroup.add(self.player)
+        self.platforms.add(self.p1)
+        self.allSprites.add(self.p1)
         self.run()
 
     def run(self):
@@ -45,8 +49,9 @@ class Game(object):
         for event in pg.event.get():
             #check for closing window
             if event.type == pg.QUIT:
-                self.playing = False
-            self.running = False
+                if self.playing:
+                    self.playing = False
+                self.running = False
     def update(self):
         """Game Loop - Update"""
         self.allSprites.update()
@@ -77,4 +82,3 @@ while g.running:
     g.gameOver()
 
 pg.quit()
-

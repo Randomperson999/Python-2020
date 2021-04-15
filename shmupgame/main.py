@@ -3,12 +3,14 @@
 # Asteroid like game
 # Original shoot sound by: Jesús Lastra
 # Original explosion from: WrathGames Studio [http://wrathgames.com/blog]
+# Music by Jordan Trudgett (tgfcoder)
 # Art by creator
 import pygame as pg
 import random as r
 import math
 import Colors as c
 from os import *
+
 
 # Game Constants
 ####################################################################
@@ -21,9 +23,19 @@ title = "Shmup"
 font_name = pg.font.match_font("arial")
 
 powerUps_list = ["lightning", "shield"]
-powerUps_chance = ["shield", "lightning", "shield", "shield"]
-POWERUP_TIME = 10000
+powerUps_chance = ["shield", "lightning", "shield", "shield", "shield"]
+POWERUP_TIME = 7000
 
+####################################################################
+
+# initialize pygame and create window
+####################################################################
+pg.init()
+pg.mixer.init()
+
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+pg.display.set_caption(title)
+clock = pg.time.Clock()
 ####################################################################
 
 # Folders
@@ -83,10 +95,8 @@ class Player(pg.sprite.Sprite):
 
     def hide(self):
         # hide player temporarily
-        print("hidden")
         self.lives -= 1
         self.powerLevel = 1
-        print(str.format("lives: {}", self.lives))
         self.hidden = True
         self.hideTimer = pg.time.get_ticks()
         self.invulnerableTimer = pg.time.get_ticks()
@@ -97,7 +107,6 @@ class Player(pg.sprite.Sprite):
     def update(self):
         # time out powerups
         if self.powerLevel >= 2 and pg.time.get_ticks() - self.powTimer > POWERUP_TIME:
-            print("timeOUT")
             self.powerLevel -= 1
 
             self.powTimer = pg.time.get_ticks()
@@ -158,7 +167,8 @@ class Player(pg.sprite.Sprite):
         if now - self.lastShot > self.shootDelay and not self.hidden:
             shoot_snd.play()
             self.lastShot = now
-
+            if self.powerLevel == 1:
+                self.shootDelay = 200
             if self.powerLevel == 2:
                 self.shootDelay = 150
             if self.powerLevel == 3 or self.powerLevel == 4:
@@ -244,7 +254,7 @@ class NPC(pg.sprite.Sprite):
         # self.image = pg.Surface((25, 25))
         # self.image.fill(c.DARK_RED)
         npcImg = r.choice(npcList)
-        self.sizeChange = r.randint(50, 150)
+        self.sizeChange = r.randint(60, 130)
         self.imageOrig = npcImg
         self.imageOrig = pg.transform.scale(self.imageOrig,
                                             (self.sizeChange, self.sizeChange))
@@ -255,7 +265,7 @@ class NPC(pg.sprite.Sprite):
         # pg.draw.circle(self.image, c.RED, self.rect.center, self.radius)
         self.rect.centerx = ((WIDTH / 2)+r.randint(-100, 100))
         self.rect.top = (0)
-        self.speedy = r.randint(1, 8)
+        self.speedy = r.randint(1, 9)
         self.speedx = r.randint(-3, 3)
         self.ang = 0
         self.rot = 0
@@ -299,7 +309,7 @@ class NPC(pg.sprite.Sprite):
             # self.speedx = r.randint(-3, 3)
             self.rect.top = 0
             self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 10)
+            self.speedy = r.randint(1, 9)
             self.speedx = r.randint(-3, 3)
         if self.rect.left < -10:
             # self.rect.right = WIDTH+10
@@ -307,12 +317,12 @@ class NPC(pg.sprite.Sprite):
             # self.speedx = r.randint(-3, 3)
             self.rect.top = 0
             self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 10)
+            self.speedy = r.randint(1, 9)
             self.speedx = r.randint(-3, 3)
         if self.rect.bottom > HEIGHT:
             self.rect.top = 0
             self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 10)
+            self.speedy = r.randint(1, 9)
             self.speedx = r.randint(-3, 3)
         # if self.rect.top < 0:
         #     self.rect.top = 0
@@ -430,15 +440,7 @@ def gameOver_screen():
 ####################################################################
 
 
-# initialize pygame and create window
-####################################################################
-pg.init()
-pg.mixer.init()
 
-screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption(title)
-clock = pg.time.Clock()
-####################################################################
 
 # load imgs
 ####################################################################
@@ -485,6 +487,7 @@ for i in range(len(powerUps_list)):
 
 shoot_snd = pg.mixer.Sound(path.join(sounds_folder, "shoot.wav"))
 expl_sound = pg.mixer.Sound(path.join(sounds_folder, "explosion1.wav"))
+music = pg.mixer.Sound(path.join(sounds_folder, "music.ogg"))
 
 ####################################################################
 
@@ -503,6 +506,7 @@ gameOver = True
 ################################################################
 while playing:
     if gameOver:
+        music.play()
         gameOver_screen()
         gameOver = False
         score = 0
@@ -519,7 +523,7 @@ while playing:
         ####################################################################
         player = Player()
         npc = NPC()
-        for i in range(15):
+        for i in range(10):
             npc = NPC()
             npc_group.add(npc)
         ####################################################################
@@ -576,7 +580,9 @@ while playing:
                 combo = 0
                 player.oldShip()
                 if player.lives <= 0:
+                    music.fadeout(10)
                     gameOver = True
+
 
         else:
             # print("invulnerable")
@@ -592,30 +598,29 @@ while playing:
         score += 10
         combo += 1
         # make a new ship if high enough points (starting at 5000)
-        if combo == 1000:
+        if combo == 700:
             player.newShip()
             ships_num = 2
             print(player.ships_num)
-        elif combo == 5000:
+        elif combo == 3000:
             player.newShip()
             ships_num = 3
             print(player.ships_num)
         if hit.radius >= 50:
             expl = Explosion(hit.rect.center, "xl")
-            print("aah")
         else:
             expl = Explosion(hit.rect.center, "lg")
         expl_sound.play()
         all_sprites.add(expl)
         npc.spawn()
-        if r.random() > .98:
+        if r.random() > .97:
             pow = Pow(hit.rect.center)
             all_sprites.add(pow)
             pows_group.add(pow)
     hits = pg.sprite.spritecollide(player, pows_group, True)
     for hit in hits:
         if hit.type == "shield":
-            num = r.randint(1, 100)
+            num = r.randint(20, 100)
             player.shieldUp(num)
         elif hit.type == "lightning":
             player.gun_power_up()
