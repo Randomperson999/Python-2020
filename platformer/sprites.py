@@ -1,21 +1,22 @@
-# ---Sprite(s)---
+#  - --- Sprite(s) --- -
 
 # You can either use this as either:
 # a file for one sprite, or all of your sprites.
 
 # If you use only one file for sprites, move the file to the main folder
 
-### imports ###
+#  - - imports - -
 import pygame as pg
 import os
 from settings import *
 
 vec = pg.math.Vector2
 
+# Sprites
 class Player(pg.sprite.Sprite):
-    def __init__(self):
-        super(Player, self).__init__()
-
+    def __init__(self, game):
+        pg.sprite.Sprite.__init__(self)
+        self.game = game
         self.image = pg.Surface((25, 25))
         self.image.fill(DEEP_RED)
         self.rect = self.image.get_rect()
@@ -31,7 +32,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         # flow movement
-        self.acc = vec(0, 0.5)
+        self.acc = vec(0, PLAYER_GRAV)
         # self.speedY = 0
         keystate = pg.key.get_pressed()
         if keystate[pg.K_LEFT] or keystate[pg.K_a]:
@@ -44,10 +45,17 @@ class Player(pg.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
 
-        self.rect.center = self.pos
-        self.wallBorder()
+        self.rect.midbottom = self.pos
+        self.loopBorder()
 
 
+    def jump(self):
+        # jump only if standing on something
+        self.rect.x += 1
+        hits = pg.sprite.spritecollide(self, self.game.platforms, False)
+        self.rect.x -= 1
+        if hits:
+            self.vel.y = -PLAYER_JUMP
 
     def toggle_pressed(self):
         self.keypressed = False
@@ -58,10 +66,21 @@ class Player(pg.sprite.Sprite):
             self.pos.x = WIDTH
         if self.pos.x < 0:
             self.pos.x = 0
-        if self.pos.y > HEIGHT:
-            self.pos.y = HEIGHT
-        if self.pos.y < 0:
-            self.pos.y = 0
+        # if self.pos.y > HEIGHT:
+        #     self.pos.y = HEIGHT
+        # if self.pos.y < 0:
+        #     self.pos.y = 0
+
+    def loopBorder(self):
+
+        if self.pos.x > WIDTH:
+            self.pos.x = 0
+        if self.pos.x < 0:
+            self.pos.x = WIDTH
+        # if self.pos.y > HEIGHT:
+        #     self.pos.y = HEIGHT
+        # if self.pos.y < 0:
+        #     self.pos.y = 0
 
     def bounceBorder(self):
 
@@ -81,7 +100,7 @@ class Player(pg.sprite.Sprite):
 
 class Platform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
-        super(Platform, self).__init__()
+        pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((w, h))
         self.image.fill(DARK_PURPLE)
         self.rect = self.image.get_rect()

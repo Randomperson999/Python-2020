@@ -1,24 +1,38 @@
-# imports
+# --- imports ---
 import os
 
-# folders
+# --- folders ---
 
 gameFolder = os.path.dirname(__file__)
 imageFolder = os.path.join(gameFolder, "image")
 sndFolder = os.path.join(gameFolder, "sound")
-# Game Values
+
+# --- Game Values ---
 
 HEIGHT = 600
 WIDTH = 480
 FPS = 60
 title = "Platformer"
+FONT_NAME = "arial"
 
-#Player Properties
+# --- Player Properties ---
 PLAYER_ACC = 0.8
 PLAYER_FRIC = -0.12
-#colors
+PLAYER_GRAV = 0.5
+PLAYER_JUMP = 15
+
+# --- Starting Platforms ---
+
+# PLATFORM_LIST = [(0, HEIGHT - 20, WIDTH, 20),
+#                  (WIDTH/2 - 50, HEIGHT * 3/4, 100, 20),
+#                  (125, HEIGHT-350, 100, 20)]
+PLATFORM_LIST = []
+
+# --- colors ---
 
 BLACK = (0, 0, 0)
+GREY = (125, 125, 125)
+DARK_GREY = (80, 80, 80)
 WHITE = (255, 255, 255)
 
 RED = (255, 0, 0)
