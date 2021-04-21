@@ -18,7 +18,7 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.game = game
         self.image = pg.Surface((25, 25))
-        self.image.fill(DEEP_RED)
+        self.image.fill(DARKER_GREY)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.pos = vec(WIDTH/2, HEIGHT/2)
@@ -102,7 +102,7 @@ class Platform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((w, h))
-        self.image.fill(DARK_PURPLE)
+        self.image.fill(DARK_GREEN)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
