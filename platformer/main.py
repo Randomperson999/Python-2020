@@ -24,13 +24,18 @@ class Game(object):
     # def loadImg(self):
     #     self.playerImg = pg.image.load(os.path.join(imageFolder, "img.png")).convert
     def loadData(self):
-        """Load high score"""
-        self.dirname = path.dirname(__file__)
-        with open(path.join(self.dirname, HS_FILE), "w") as f:
+        """Loads high score, images, ect."""
+        self.dir = path.dirname(__file__)
+        img_dir = path.join(self.dir, 'imgs')
+        # high score
+        with open(path.join(self.dir, HS_FILE), "r") as f:
             try:
                 self.highscore = int(f.read())
             except:
                 self.highscore = 0
+        # spritesheet image
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+
 
 
     def newGame(self):
@@ -45,13 +50,13 @@ class Game(object):
         # game objects
         self.player = Player(self)
 
-        p1 = makePlatform(0, HEIGHT - 20, WIDTH, 20)
-        p2 = makePlatform(WIDTH/2 - 50, HEIGHT * 3/4, 100, 20)
-        p3 = makePlatform(125, HEIGHT-350, 100, 20)
-        p4 = makePlatform(255, HEIGHT-500, 80, 20)
+        p1 = makePlatform(0, HEIGHT - 50)
+        p2 = makePlatform(WIDTH/2 - 50, HEIGHT * 3/4)
+        p3 = makePlatform(125, HEIGHT-350)
+        p4 = makePlatform(255, HEIGHT-500)
 
         for plat in PLATFORM_LIST:
-            p = Platform(*plat)
+            p = Platform(self, *plat)
             self.allSprites.add(p)
             self.platforms.add(p)
 
@@ -93,13 +98,18 @@ class Game(object):
         if self.player.vel.y >= 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                self.player.pos.y = hits[0].rect.top+1
-                self.player.vel.y = 0
+                lowest = hits[0]
+                for hit in hits:
+                    if hit.rect.bottom > lowest.rect.bottom:
+                        lowest = hit
+                if self.player.pos.y < lowest.rect.bottom:
+                    self.player.pos.y = lowest.rect.top+1
+                    self.player.vel.y = 0
         # if player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
-            self.player.pos.y += abs(self.player.vel.y)
+            self.player.pos.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
-                plat.rect.y += abs(self.player.vel.y)
+                plat.rect.y += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
@@ -116,9 +126,8 @@ class Game(object):
 
         while len(self.platforms) < 6:
             width = r.randrange(50, 100)
-            p = Platform(r.randrange(0, WIDTH-width),
-                         r.randrange(-75, -30),
-                         width, 20)
+            p = Platform(self, r.randrange(0, WIDTH-width),
+                         r.randrange(-75, -30))
             self.platforms.add(p)
             self.allSprites.add(p)
 
@@ -126,6 +135,7 @@ class Game(object):
         """Game Loop - Draw"""
         self.screen.fill(BG_COLOR)
         self.allSprites.draw(self.screen)
+        self.screen.blit(self.player.image, self.player.rect)
         self.drawText(str(self.score), 22, DARKISH_GREY, WIDTH/2, 15)
         # *after* drawing everything, flip the display
         pg.display.flip()
@@ -170,6 +180,13 @@ class Game(object):
         self.drawText("GAME O V E R", 48, BLACK, WIDTH / 2, HEIGHT / 4)
         self.drawText("Score: " + str(self.score), 22, BLACK, WIDTH / 2, HEIGHT / 2)
         self.drawText("Press any key to play again", 22, BLACK, WIDTH / 2, HEIGHT * 3 / 4)
+        if self.score > self.highscore:
+            self.highscore = self.score
+            self.drawText("New high score!", 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
+            with open(path.join(self.dir, HS_FILE), 'w') as f:
+                f.write(str(self.score))
+        else:
+            self.drawText("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
         self.waiting()
     def options(self):

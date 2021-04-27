@@ -3,9 +3,9 @@ from settings import *
 from sprites import *
 
 
-def makePlatform(x, y, w, h):
-    plat = (x, y, w, h)
-    # print(str(plat))
+def makePlatform(x, y):
+    plat = (x, y)
+    print(str(plat))
     PLATFORM_LIST.append(plat)
     return plat
 
