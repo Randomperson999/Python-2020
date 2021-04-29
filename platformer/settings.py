@@ -22,7 +22,7 @@ SPRITESHEET = "spritesheet_jumper.png"
 PLAYER_ACC = 0.8
 PLAYER_FRIC = -0.12
 PLAYER_GRAV = 0.5
-PLAYER_JUMP = 15
+PLAYER_JUMP = 20
 
 # --- Starting Platforms ---
 

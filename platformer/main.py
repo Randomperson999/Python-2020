@@ -1,3 +1,8 @@
+print(" ---- Game by Caleb Keller using tutorial. --------")
+print(" --- 'Yipee' song by Snabisch (opengameart.org) ---")
+print(" --- 'Happy Tune' by Suncopika (opengameart.org) --")
+print(" --- Art from Kenney.nl ---------------------------")
+print("\tYou might want to turn the volume down...")
 import pygame as pg
 import random as r
 import math as m
@@ -35,14 +40,20 @@ class Game(object):
                 self.highscore = 0
         # spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
-
+        # load sounds
+        self.snd_dir = path.join(self.dir, 'snd')
+        self.jumpSound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump40.wav'))
+        self.music = pg.mixer.Sound(path.join(self.snd_dir, 'Yippee.ogg'))
+        self.music2 = pg.mixer.Sound(path.join(self.snd_dir, 'Happy Tune.ogg'))
+        # self.dethSound = pg.mixer.Sound(path.join(self.snd_dir, '.wav'))
 
 
     def newGame(self):
         """starts a new game"""
         self.score = 0
         # create new groups
-
+        self.music2.fadeout(1)
+        self.music.play(loops=-1)
         self.allSprites = pg.sprite.Group()
         self.playersGroup = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
@@ -91,6 +102,10 @@ class Game(object):
                     if self.playing:
                         self.playing = False
                     self.running = False
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_SPACE:
+                    self.player.jumpCut()
+
     def update(self):
         """Game Loop - Update"""
         self.allSprites.update()
@@ -102,9 +117,10 @@ class Game(object):
                 for hit in hits:
                     if hit.rect.bottom > lowest.rect.bottom:
                         lowest = hit
-                if self.player.pos.y < lowest.rect.bottom:
+                if self.player.pos.y < lowest.rect.centery:
                     self.player.pos.y = lowest.rect.top+1
                     self.player.vel.y = 0
+                    self.player.jumping = False
         # if player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
@@ -117,6 +133,7 @@ class Game(object):
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.allSprites:
                 sprite.rect.y -= max(self.player.vel.y, 10)
+                # self.dethSound.play()
                 if sprite.rect.bottom < 0:
                     sprite.kill()
 
@@ -150,9 +167,11 @@ class Game(object):
         self.screen.fill(BG_COLOR)
         self.drawText(title, 48, BLACK, WIDTH / 2, HEIGHT / 4)
         self.drawText("Arrows to move space to jump", 22, BLACK, WIDTH / 2, HEIGHT / 2)
+        self.drawText("You might want to turn the volume down...", 22, BLACK, WIDTH / 2, HEIGHT / 2+50)
         self.drawText("Press any key to play (except escape).", 22, BLACK, WIDTH / 2, HEIGHT * 3 / 4)
         self.drawText("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, 15)
         pg.display.flip()
+        self.music2.play(loops=-1)
         self.waiting()
 
     def waiting(self):
@@ -177,9 +196,10 @@ class Game(object):
         if not self.running:
             return
         self.screen.fill(BG_COLOR)
+        self.music.fadeout(1)
         self.drawText("GAME O V E R", 48, BLACK, WIDTH / 2, HEIGHT / 4)
         self.drawText("Score: " + str(self.score), 22, BLACK, WIDTH / 2, HEIGHT / 2)
-        self.drawText("Press any key to play again", 22, BLACK, WIDTH / 2, HEIGHT * 3 / 4)
+        self.drawText("Press any key to play again (except escape).", 22, BLACK, WIDTH / 2, HEIGHT * 3 / 4)
         if self.score > self.highscore:
             self.highscore = self.score
             self.drawText("New high score!", 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
@@ -188,6 +208,7 @@ class Game(object):
         else:
             self.drawText("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
+        self.music2.play(loops=-1)
         self.waiting()
     def options(self):
         pass

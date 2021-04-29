@@ -64,7 +64,8 @@ class Player(pg.sprite.Sprite):
         self.pos += self.vel + 0.5 * self.acc
         if abs(self.vel.x) < 0.1:
             self.vel.x = 0
-
+        if abs(self.vel.y) < 0.1:
+            self.vel.y = 0
         self.rect.midbottom = self.pos
         self.loopBorder()
 
@@ -81,13 +82,26 @@ class Player(pg.sprite.Sprite):
             self.walk_frames_l.append(pg.transform.flip(frame, True, False))
         self.jumpFrame = self.game.spritesheet.getImage(382, 763, 150, 181)
         self.jumpFrame.set_colorkey(BLACK)
+
+    def jumpCut(self):
+        if self.jumping:
+            if self.vel.y < -.1:
+                self.vel.y = -.1
+
     def jump(self):
         # jump only if standing on something
         self.rect.x += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.x -= 2
-        if hits:
-            self.vel.y = -PLAYER_JUMP
+        if hits and not self.jumping:
+            lowest = hits[0]
+            for hit in hits:
+                if hit.rect.bottom > lowest.rect.bottom:
+                    lowest = hit
+            if self.pos.y < lowest.rect.centery:
+                self.jumping = True
+                self.vel.y = -PLAYER_JUMP
+                self.game.jumpSound.play( )
 
     def toggle_pressed(self):
         self.keypressed = False
@@ -158,6 +172,12 @@ class Player(pg.sprite.Sprite):
                 self.image = self.standing_frames[self.currentFrame]
                 self.rect = self.image.get_rect()
                 self.rect.bottom = bottom
+        if self.jumping:
+            self.image = self.jumpFrame
+            bottom = self.rect.bottom
+            self.rect = self.image.get_rect()
+            self.rect.bottom = bottom
+
 
 class Platform(pg.sprite.Sprite):
     def __init__(self, game, x, y):
