@@ -265,7 +265,7 @@ class NPC(pg.sprite.Sprite):
         # pg.draw.circle(self.image, c.RED, self.rect.center, self.radius)
         self.rect.centerx = ((WIDTH / 2)+r.randint(-100, 100))
         self.rect.top = (0)
-        self.speedy = r.randint(1, 9)
+        self.speedy = r.randint(1, 10)
         self.speedx = r.randint(-3, 3)
         self.ang = 0
         self.rot = 0
@@ -308,21 +308,21 @@ class NPC(pg.sprite.Sprite):
             # self.speedy = r.randint(1, 3)
             # self.speedx = r.randint(-3, 3)
             self.rect.top = 0
-            self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 9)
+            self.rect.centerx = r.randint(2, 558)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         if self.rect.left < -10:
             # self.rect.right = WIDTH+10
             # self.speedy = r.randint(1, 3)
             # self.speedx = r.randint(-3, 3)
             self.rect.top = 0
-            self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 9)
+            self.rect.centerx = r.randint(2, 558)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         if self.rect.bottom > HEIGHT:
             self.rect.top = 0
-            self.rect.centerx = r.randint(5, 555)
-            self.speedy = r.randint(1, 9)
+            self.rect.centerx = r.randint(2, 558)
+            self.speedy = r.randint(1, 10)
             self.speedx = r.randint(-3, 3)
         # if self.rect.top < 0:
         #     self.rect.top = 0
@@ -598,14 +598,14 @@ while playing:
         score += 10
         combo += 1
         # make a new ship if high enough points (starting at 5000)
-        if combo == 700:
+        if combo == 1000:
             player.newShip()
             ships_num = 2
-            print(player.ships_num)
-        elif combo == 3000:
+            # print(player.ships_num)
+        elif combo == 10000:
             player.newShip()
             ships_num = 3
-            print(player.ships_num)
+            # print(player.ships_num)
         if hit.radius >= 50:
             expl = Explosion(hit.rect.center, "xl")
         else:

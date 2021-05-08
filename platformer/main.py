@@ -3,7 +3,6 @@ print(" --- 'Yipee' song by Snabisch (opengameart.org) ---")
 print(" --- 'Happy Tune' by Suncopika (opengameart.org) --")
 print(" --- Death and boost sounds by HaelDB -------------\n ---(opengameartorg)-------------------------------")
 print(" --- Art from Kenney.nl ---------------------------")
-print("\tYou might want to turn the volume down...")
 import pygame as pg
 import random as r
 import math as m
@@ -123,7 +122,7 @@ class Game(object):
             self.dethSound.play()
             self.playing = False
         # check if player hits platform - only if falling
-        if self.player.vel.y >= 0:
+        if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
                 lowest = hits[0]
@@ -200,7 +199,6 @@ class Game(object):
         self.screen.fill(BG_COLOR)
         self.drawText(title, 48, BLACK, WIDTH / 2, HEIGHT / 4)
         self.drawText("Arrows to move space to jump", 22, BLACK, WIDTH / 2, HEIGHT / 2)
-        self.drawText("You might want to turn the volume down...", 22, BLACK, WIDTH / 2, HEIGHT / 2+50)
         self.drawText("Press any key to play (except escape).", 22, BLACK, WIDTH / 2, HEIGHT * 3 / 4)
         self.drawText("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, 15)
         pg.display.flip()
