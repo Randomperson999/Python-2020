@@ -6,6 +6,7 @@ from os import path
 from settings import *
 from sprites import *
 import sys
+from tilemap import *
 
 class Game(object):
     def __init__(self):
@@ -21,10 +22,7 @@ class Game(object):
     #     self.playerImg = pg.image.load(os.path.join(imageFolder, "img.png")).convert
 
     def loadData(self):
-        self.mapData = []
-        with open(path.join(gameFolder, 'map.txt'), 'rt') as f:
-            for line in f:
-                self.mapData.append(line)
+        self.map = Map(path.join(gameFolder, 'map2.txt'))
 
     def newGame(self):
         """starts a new game"""
@@ -36,12 +34,13 @@ class Game(object):
         self.walls = pg.sprite.Group()
 
         # game objects
-        self.player = Player(self, 10, 10)
 
-        for row, tiles in enumerate(self.mapData):
+        for row, tiles in enumerate(self.map.mapData):
             for col, tile in enumerate(tiles):
                 if tile == '1':
                     Wall(self, col, row)
+                if tile == 'P':
+                    self.player = Player(self, col, row)
 
 
         # add objects to sprite groups
@@ -51,7 +50,7 @@ class Game(object):
         """runs the game"""
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
+            self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.update()
             self.draw()
@@ -63,18 +62,8 @@ class Game(object):
                 self.playing = False
             self.running = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
+                if event.key == pg.K_x:
                     self.quit()
-                # if event.key == pg.K_LEFT:
-                #     self.player.move(dx=-1)
-                # if event.key == pg.K_LEFT or event.key == pg.K_a:
-                #     self.player.move(dx=-1)
-                # if event.key == pg.K_RIGHT or event.key == pg.K_d:
-                #     self.player.move(dx=1)
-                # if event.key == pg.K_UP or event.key == pg.K_w:
-                #     self.player.move(dy=-1)
-                # if event.key == pg.K_DOWN or event.key == pg.K_s:
-                #     self.player.move(dy=1)
 
     def update(self):
         """Game Loop - Update"""
