@@ -14,7 +14,7 @@ vec = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, game, x=200, y=HEIGHT-80):
         self._layer = PLAYER_LYR
         self.groups = game.allSprites, game.playersGroup
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -27,15 +27,39 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface((TILE_SIZE, TILE_SIZE*2))
         self.image.fill(DEEP_GREY)
         self.rect = self.image.get_rect()
-        self.rect.center = (40, HEIGHT - 50)
-        self.pos = vec(80, HEIGHT - 50)
+        self.rect.center = (x, y)
+        self.pos = vec(x, y)
         self.ang = 10
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        self.is_moving_right = False
+        self.is_moving_left = False
+        self.is_moving_up = False
+        self.is_moving_down = False
 
 
 
         self.keypressed = False
+
+    def collideWalls(self):
+        hits = pg.sprite.spritecollide(self, self.game.blocks, False)
+        if hits and self.is_moving_down:
+            self.pos.y = hits[0].rect.top - 1
+            self.vel.y = 0
+            self.jumping = False
+        if hits and self.is_moving_up:
+            self.pos.y = hits[0].rect.bottom + 1 + self.rect.height
+            self.vel.y = 0
+            self.jumping = False
+        if hits and self.is_moving_left:
+            self.pos.x = hits[0].rect.right + 1 + (1/2 * self.rect.width)
+            self.vel.x = 0
+            self.walking = False
+            print("aaa")
+        if hits and self.is_moving_right:
+            self.pos.x = hits[0].rect.left - 1 - (1/2 * self.rect.width)
+            self.vel.x = 0
+            self.walking = False
 
     def update(self):
         self.acc = vec(0, PLAYER_GRAV)
@@ -50,16 +74,24 @@ class Player(pg.sprite.Sprite):
         # motion
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
-        if abs(self.vel.x) < 0.1:
+        if abs(self.vel.x) < .85:
             self.vel.x = 0
-        if abs(self.vel.y) < 0.1:
+        if abs(self.vel.y) < .85:
             self.vel.y = 0
-        if pg.sprite.spritecollideany(self, self.game.blocks):
-            self.vel.x = -self.vel.x
-            self.vel.y = -self.vel.y
+        if self.vel.x > 0:
+            self.is_moving_right = True
+            self.is_moving_left = False
+        if self.vel.x < 0:
+            self.is_moving_left = True
+            self.is_moving_right = False
+        if self.vel.y > 0:
+            self.is_moving_down = True
+            self.is_moving_up = False
+        if self.vel.y < 0:
+            self.is_moving_up = True
+            self.is_moving_down = False
+        self.collideWalls()
         self.rect.midbottom = self.pos
-
-        self.loopBorder()
 
     def jumpCut(self):
         if self.jumping:
@@ -68,17 +100,25 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         # jump only if standing on something
-        self.rect.x += 2
-        hits = pg.sprite.spritecollide(self, self.game.blocks, False)
-        self.rect.x -= 2
-        if hits and not self.jumping:
-            lowest = hits[0]
-            for hit in hits:
-                if hit.rect.bottom > lowest.rect.bottom:
-                    lowest = hit
-            if self.pos.y < lowest.rect.centery:
-                self.jumping = True
-                self.vel.y = -PLAYER_JUMP
+        # self.rect.x += 2
+        # hits = pg.sprite.spritecollide(self, self.game.blocks, False)
+        # self.rect.x -= 2
+        # if hits and not self.jumping:
+        #     lowest = hits[0]
+        #     for hit in hits:
+        #         if hit.rect.bottom > lowest.rect.bottom:
+        #             lowest = hit
+        #     if self.pos.y < lowest.rect.centery:
+        #         self.jumping = True
+        #         self.vel.y = -PLAYER_JUMP
+        # if not self.jumping:
+        #     lowest = hits[0]
+        #     for hit in hits:
+        #         if hit.rect.bottom > lowest.rect.bottom:
+        #             lowest = hit
+        #     if self.pos.y < lowest.rect.centery:
+        self.jumping = True
+        self.vel.y = -PLAYER_JUMP
 
     def toggle_pressed(self):
         self.keypressed = False

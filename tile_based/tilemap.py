@@ -17,4 +17,8 @@ class Camera:
         self.height = height
 
     def apply(self, entity):
-        pass
+        return entity.rect.move(self.camera.topleft)
+    def update(self, target):
+        x = -target.rect.x + int(WIDTH / 2)
+        y = -target.rect.y + int(HEIGHT / 2)
+        self.camera = pg.Rect(x, y, self.width, self.height)

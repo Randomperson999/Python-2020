@@ -88,22 +88,17 @@ class Game(object):
         # check if player hits block - if falling or jumping
         # hits = pg.sprite.spritecollide(self.player, self.blocks, False)
         # if hits:
-        #     lowest = hits[0]
         #     for hit in hits:
-        #         if self.player.vel.y < 0:
-        #             if self.player.rect.top < hit.rect.bottom:
-        #                 # self.player.pos.y = hit.rect.bottom + 1
-        #                 self.player.vel.y = 0
-        #                 self.player.jumping = False
-        #         elif self.player.vel.y > 0:
-        #             if hit.rect.bottom > lowest.rect.top:
-        #                 lowest = hit
-        #             elif hit.rect.bottom == lowest.rect.bottom:
-        #                 pass
-        #             if self.player.pos.y < hit.rect.bottom:
-        #                 self.player.pos.y = hit.rect.top+1
-        #                 self.player.vel.y = 0
-        #                 self.player.jumping = False
+                # if self.player.vel.y <= 0:
+                #     if self.player.rect.top < hit.rect.bottom:
+                #         self.player.pos.y = hit.rect.bottom + 1
+                #         self.player.vel.y = 0
+                #         self.player.jumping = False
+                # if self.player.vel.y >= 0:
+                #     if self.player.rect.top < hit.rect.top:
+                #         self.player.pos.y = hit.rect.top+1
+                #         self.player.vel.y = 0
+                #         self.player.jumping = False
                 # if self.player.vel.x > 0:
                 #     if self.player.rect.right >= hit.rect.left and self.player.rect.bottom > hit.rect.top+3:
                 #         self.player.pos.x = hit.rect.left - 16
@@ -114,6 +109,7 @@ class Game(object):
                 #         self.player.pos.x = hit.rect.right + 16
                 #         self.player.vel.x = 0
                 #         self.player.walking = False
+
 
     def drawGrid(self):
         for x in range(0, WIDTH, TILE_SIZE):

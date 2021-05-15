@@ -34,6 +34,7 @@ class Game(object):
         self.walls = pg.sprite.Group()
 
         # game objects
+        self.camera = Camera(self.map.width, self.map.height)
 
         for row, tiles in enumerate(self.map.mapData):
             for col, tile in enumerate(tiles):
@@ -68,6 +69,7 @@ class Game(object):
     def update(self):
         """Game Loop - Update"""
         self.allSprites.update()
+        self.camera.update(self.player)
     def drawGrid(self):
         for x in range(0, WIDTH, TILE_SIZE):
             pg.draw.line(self.screen, BLACK, (x, 0), (x, HEIGHT))
@@ -77,7 +79,9 @@ class Game(object):
         """Game Loop - Draw"""
         self.screen.fill(BG_COLOR)
         self.drawGrid()
-        self.allSprites.draw(self.screen)
+        for sprite in self.allSprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
+
         # *after* drawing everything, flip the display
         pg.display.flip()
 
