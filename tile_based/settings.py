@@ -39,8 +39,8 @@ NEON_GREEN = (57, 255, 20)
 BLUE_GREEN = (0, 100, 100)
 # Game Values
 
-HEIGHT = 768
-WIDTH = 1024
+HEIGHT = 704
+WIDTH = 992
 FPS = 30
 title = "Tile Based"
 BG_COLOR = GOLD
