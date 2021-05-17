@@ -9,7 +9,7 @@
 import pygame as pg
 import os
 from settings import *
-
+vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -19,54 +19,51 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface((TILE_SIZE, TILE_SIZE))
         self.image.fill(DEEP_GREY)
         self.rect = self.image.get_rect()
+        self.vel = vec(0, 0)
+        self.pos = vec(x, y) * TILE_SIZE
         self.x = x * TILE_SIZE
         self.y = y * TILE_SIZE
-        # self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.ang = 10
-        self.vx, self.vy = 0, 0
         self.keypressed = False
 
     def getKeys(self):
-        self.vx, self.vy = 0, 0
+        self.vel = vec(0, 0)
         keystate = pg.key.get_pressed()
         if keystate[pg.K_LEFT] or keystate[pg.K_a]:
-            self.vx = -PLYR_SPEED
+            self.vel.x = -PLYR_SPEED
         if keystate[pg.K_RIGHT] or keystate[pg.K_d]:
-            self.vx = PLYR_SPEED
+            self.vel.x = PLYR_SPEED
         if keystate[pg.K_UP] or keystate[pg.K_w]:
-            self.vy = -PLYR_SPEED
+            self.vel.y = -PLYR_SPEED
         if keystate[pg.K_DOWN] or keystate[pg.K_s]:
-            self.vy = PLYR_SPEED
-        if self.vx != 0 and self.vy != 0:
-            self.vx *= 0.7071
-            self.vy *= 0.7071
+            self.vel.y = PLYR_SPEED
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel *= 0.7071
 
     def collideWalls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                if self.vx > 0:
-                    self.x = hits[0].rect.left - self.rect.width
-                if self.vx < 0:
-                    self.x = hits[0].rect.right
-                self.vx = 0
-                self.rect.x = self.x
+                if self.vel.x > 0:
+                    self.pos.x = hits[0].rect.left - self.rect.width
+                if self.vel.x < 0:
+                    self.pos.x = hits[0].rect.right
+                self.vel.x = 0
+                self.rect.x = self.pos.x
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                if self.vy > 0:
-                    self.y = hits[0].rect.top - self.rect.height
-                if self.vy < 0:
-                    self.y = hits[0].rect.bottom
-                self.vy = 0
-                self.rect.y = self.y
+                if self.vel.y > 0:
+                    self.pos.y = hits[0].rect.top - self.rect.height
+                if self.vel.y < 0:
+                    self.pos.y = hits[0].rect.bottom
+                self.vel.y = 0
+                self.rect.y = self.pos.y
     def update(self):
         self.getKeys()
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.rect.x = self.x
+        self.pos += self.vel * self.game.dt
+        self.rect.x = self.pos.x
         self.collideWalls('x')
-        self.rect.y = self.y
+        self.rect.y = self.pos.y
         self.collideWalls('y')
 
     def toggle_pressed(self):
