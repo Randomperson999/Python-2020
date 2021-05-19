@@ -1,12 +1,17 @@
 # imports
 import os
-
+import pygame as pg
 # folders
 
-gameFolder = os.path.dirname(__file__)
-imageFolder = os.path.join(gameFolder, "image")
-sndFolder = os.path.join(gameFolder, "sound")
 
+gameFolder = os.path.dirname(__file__)
+imageFolder = os.path.join(gameFolder, "imgs")
+sndFolder = os.path.join(gameFolder, "sound")
+PLAYER_IMG = "manBlue_machine.png"
+WALL_IMG = "tile_171.png"
+
+SPRITESHEET = "spritesheet_tiles.png"
+SPRITESHEET2 = "spritesheet_characters.png"
 #colors
 
 BLACK = (0, 0, 0)
@@ -23,6 +28,8 @@ YELLOW = (255, 255, 0)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
 
+BRONZE = (176, 125, 10)
+
 DARKISH_BLUE = (0, 0, 125)
 DARK_BLUE = (0, 0, 80)
 DEEP_BLUE = (0, 0, 30)
@@ -37,18 +44,29 @@ GOLD = (180, 130, 0)
 CORNFLOWER_BLUE = (100, 149, 237)
 NEON_GREEN = (57, 255, 20)
 BLUE_GREEN = (0, 100, 100)
+
+NICE_PURPLE = (69, 42, 69)
 # Game Values
 
 HEIGHT = 704
 WIDTH = 992
-FPS = 30
+FPS = 60
 title = "Tile Based"
-BG_COLOR = GOLD
+BG_COLOR = BRONZE
 
-TILE_SIZE = 32
+TILE_SIZE = 64
 GRID_WITH = WIDTH / TILE_SIZE
 GRID_HEIGHT = HEIGHT / TILE_SIZE
 # Player
 PLYR_SPEED = 300
+PLYR_ROT_SPEED = 250
+PLYR_HIT_RECT = pg.Rect(0, 0, 35, 35)
 
-#
+# GUn Settings:
+BULLET_IMG = 'bullet.png'
+BULLET_SPEED = 500
+# Mob Settings
+MOB_IMG = "zoimbie1_gun.png"
+MOB_SPEED = 150
+MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
+
