@@ -1,6 +1,7 @@
 # imports
 import os
 import pygame as pg
+vec = pg.math.Vector2
 # folders
 
 
@@ -57,16 +58,28 @@ BG_COLOR = BRONZE
 TILE_SIZE = 64
 GRID_WITH = WIDTH / TILE_SIZE
 GRID_HEIGHT = HEIGHT / TILE_SIZE
+
 # Player
+PLYR_HP = 100
 PLYR_SPEED = 300
 PLYR_ROT_SPEED = 250
 PLYR_HIT_RECT = pg.Rect(0, 0, 35, 35)
+BARREL_OFFSET = vec(27, 10)
 
-# GUn Settings:
+# Gun Settings:
 BULLET_IMG = 'bullet.png'
 BULLET_SPEED = 500
+BULLET_LV_TIME = 1300
+BULLET_RATE = 200
+KICKBACK = 100
+GUN_SPREAD = 5
+BULLET_DAMAGE = 10
+
 # Mob Settings
+MOB_HP = 100
 MOB_IMG = "zoimbie1_gun.png"
 MOB_SPEED = 150
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
+MOB_DAMAGE = 10
+MOB_KNOCKBACK = 10
 
